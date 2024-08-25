@@ -1,0 +1,29 @@
+// Sidebar
+$sidebar-width-lg: 240px;
+$sidebar-folded-width: 70px;
+$sidebar-dark-bg: #0c1427;
+
+// Navbar
+$navbar-height: 60px;
+
+// Fonts
+$font-family-base: 'Noto Sans JP', 'メイリオ', 'Meiryo', verdana,
+  'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'Osaka', 'ＭＳ Ｐゴシック',
+  'MS PGothic', Sans-Serif;
+
+// colors
+
+$primary: #3a68de;
+$body-bg: #ffffff;
+$body-color: #172b4d;
+$bg-image: #3060dd;
+$table-striped-bg: #f7faff;
+// $card-bg: #F7FAFF;
+
+// button
+$btn-border-radius: 0;
+
+// Breadcrumb
+$breadcrumb-divider: quote('>');
+$breadcrumb-divider-color: $primary;
+$breadcrumb-active-color: $primary;

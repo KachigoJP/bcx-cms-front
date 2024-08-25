@@ -1,0 +1,38 @@
+.mainbox {
+  background-color: #95c2de;
+  margin: auto;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+}
+
+.err {
+  color: #ffffff;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 11rem;
+
+  justify-content: center;
+  text-align: center;
+}
+.msg {
+  text-align: center;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 1.6rem;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+.msg a:hover {
+  text-decoration: underline;
+}
+@media screen and (max-width: 599px) {
+  .msg {
+    font-size: 20px;
+  }
+}

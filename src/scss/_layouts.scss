@@ -1,0 +1,47 @@
+input.hide-arrow {
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+.sidebar-open,
+.settings-open {
+  @media (max-width: 991px) {
+    .main-wrapper {
+      &::before {
+        content: '';
+        width: 100vw;
+        background: rgba(0, 0, 0, 0.3);
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 99;
+        -webkit-transition: all 3s ease;
+        transition: all 3s ease;
+        z-index: 980;
+      }
+    }
+  }
+}
+
+body.nolayout {
+  height: 100vh;
+  body,
+  #root,
+  .container {
+    height: 100%;
+  }
+}
+
+.paypal-button {
+  width: 200px;
+  height: 40px;
+}
