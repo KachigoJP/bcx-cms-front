@@ -41,18 +41,18 @@ $dark: $gray-900 !default;
 
 // Social colors
 $social-colors: (
-  'facebook': #3b5998,
-  'twitter': #1da1f2,
-  'google': #dc4e41,
-  'youtube': #f00,
-  'vimeo': #1ab7ea,
-  'dribbble': #ea4c89,
-  'github': #181717,
-  'instagram': #e4405f,
-  'pinterest': #bd081c,
-  'flickr': #0063dc,
-  'bitbucket': #0052cc,
-  'linkedin': #0077b5,
+  "facebook": #3b5998,
+  "twitter": #1da1f2,
+  "google": #dc4e41,
+  "youtube": #f00,
+  "vimeo": #1ab7ea,
+  "dribbble": #ea4c89,
+  "github": #181717,
+  "instagram": #e4405f,
+  "pinterest": #bd081c,
+  "flickr": #0063dc,
+  "bitbucket": #0052cc,
+  "linkedin": #0077b5,
 ) !default;
 
 // The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
@@ -143,7 +143,7 @@ $action-transition-timing-function: ease;
 // Font, line-height, and color for body text, headings, and more.
 
 // Font family
-$font-family-sans-serif: 'Roboto', Helvetica, sans-serif !default;
+$font-family-sans-serif: "Roboto", Helvetica, sans-serif !default;
 
 $font-size-base: 0.875rem !default; // 14px
 $font-size-lg: 1rem !default; // 16px
@@ -273,6 +273,7 @@ $card-border-color: #f2f4f9 !default;
 $card-cap-padding-y: 0.875rem !default;
 $card-cap-padding-x: $card-spacer-x !default;
 $card-cap-bg: rgba($black, 0.01) !default;
+$card-bg: rgba($black, 0.05) !default; // dark
 
 // Accordion
 $accordion-bg: $white !default;

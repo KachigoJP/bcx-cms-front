@@ -24,11 +24,7 @@ import { getForgotPassSchema } from "../../helpers/schemas";
 import { useApi, FieldError } from "../../helpers/api";
 import { API, ROUTES, CAPTCHA_KEY } from "../../helpers/constants";
 import ResponseModal from "../../components/Modals/ResponseModal";
-
-type ForgotForm = {
-  email: string;
-  recaptchaResponse: string;
-};
+import { IForgotForm } from "../../helpers/interfaces";
 
 const ForgotPassword: React.FC = () => {
   // Hooks
@@ -38,13 +34,15 @@ const ForgotPassword: React.FC = () => {
 
   // Form Validations
   const validationSchema = getForgotPassSchema(t);
-  const formOptions = { resolver: yupResolver(validationSchema) };
+
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<ForgotForm>(formOptions);
+  } = useForm<IForgotForm>({
+    resolver: yupResolver<IForgotForm>(validationSchema),
+  });
 
   // APIs
   const { state, sendRequest } = useApi(API.FORGOT_PASS);
@@ -70,7 +68,7 @@ const ForgotPassword: React.FC = () => {
   const onCaptchaChange = (token: string | null) => {
     setverifyToken(token);
   };
-  const onSubmit = (data: ForgotForm) => {
+  const onSubmit = (data: IForgotForm) => {
     if (verifyToken === null || verifyToken === "") {
       setError("recaptchaResponse", {
         type: "required",

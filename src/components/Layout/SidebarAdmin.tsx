@@ -44,9 +44,9 @@ const Sidebar: React.FC = () => {
     <React.Fragment>
       <nav className="sidebar d-none d-lg-block">
         <div className="sidebar-header">
-          <Link to={ROUTES.ADMIN_LIST_USER} className="sidebar-brand">
+          {/* <Link to={ROUTES.ADMIN_LIST_USER} className="sidebar-brand">
             <img src={LOGO} className="w-75" alt="logo" />
-          </Link>
+          </Link> */}
           <div
             className={`sidebar-toggler ${
               isFoldedSidebar ? "active" : "not-active"
@@ -65,90 +65,26 @@ const Sidebar: React.FC = () => {
         >
           <ul className="nav">
             <li className="nav-item nav-category">{t("Home")}</li>
-            {/* <li
-              className={`nav-item ${
-                location.pathname === ROUTES.DASHBOARD ? 'active' : ''
-              }`}
-            >
-              <Link to={ROUTES.DASHBOARD} className="nav-link">
-                <MdDashboard className="link-icon" />
-                <span className="link-title">{t('Menu')}</span>
-              </Link>
-            </li> */}
             <li
               className={`nav-item ${
-                location.pathname === ROUTES.ADMIN_NOTIFICATION ? "active" : ""
+                location.pathname === ROUTES.USER_LIST ? "active" : ""
               }`}
             >
-              <Link to={ROUTES.ADMIN_NOTIFICATION} className="nav-link">
-                <MdCircleNotifications className="link-icon" />
-                <span className="link-title">{t("Notifications Manager")}</span>
-              </Link>
-            </li>
-            <li
-              className={`nav-item ${
-                location.pathname === ROUTES.ADMIN_LIST_USER ? "active" : ""
-              }`}
-            >
-              <Link to={ROUTES.ADMIN_LIST_USER} className="nav-link">
+              <Link to={ROUTES.USER_LIST} className="nav-link">
                 <MdSupervisorAccount className="link-icon" />
                 <span className="link-title">{t("Users")}</span>
               </Link>
             </li>
             <li
               className={`nav-item ${
-                location.pathname === ROUTES.ADMIN_LIST_MASTER ? "active" : ""
+                location.pathname === ROUTES.SETTING ? "active" : ""
               }`}
             >
-              <Link to={ROUTES.ADMIN_LIST_MASTER} className="nav-link">
-                <MdAccountBox className="link-icon" />
-                <span className="link-title">{t("List Master")}</span>
-              </Link>
-            </li>
-            <li
-              className={`nav-item ${
-                location.pathname === ROUTES.ADMIN_UPGRADE_MASTER
-                  ? "active"
-                  : ""
-              }`}
-            >
-              <Link to={ROUTES.ADMIN_UPGRADE_MASTER} className="nav-link">
-                <MdOutlineSupervisedUserCircle className="link-icon" />
-                <span className="link-title">{t("Upgrade Master User")}</span>
-              </Link>
-            </li>
-            <li
-              className={`nav-item ${
-                location.pathname === ROUTES.ADMIN_FEE_SETTING ? "active" : ""
-              }`}
-            >
-              <Link to={ROUTES.ADMIN_FEE_SETTING} className="nav-link">
-                <MdSettingsSuggest className="link-icon" />
-                <span className="link-title">{t("Fee Setting")}</span>
-              </Link>
-            </li>
-            <li
-              className={`nav-item ${
-                location.pathname === ROUTES.ADMIN_SETTING ? "active" : ""
-              }`}
-            >
-              <Link to={ROUTES.ADMIN_SETTING} className="nav-link">
+              <Link to={ROUTES.SETTING} className="nav-link">
                 <MdAttachMoney className="link-icon" />
                 <span className="link-title">{t("Pool Limit")}</span>
               </Link>
             </li>
-            {/* <li
-              className={`nav-item ${
-                location.pathname === ROUTES.DEPOSIT_REPORT ? 'active' : ''
-              }`}
-            >
-              <Link to={ROUTES.ADMIN_DEPOSIT_REPORT} className="nav-link">
-                <MdAttachMoney className="link-icon" />
-                <span className="link-title">
-                  {t('Rays Wallet Deposit Report')}
-                </span>
-              </Link>
-            </li> */}
           </ul>
         </div>
       </nav>

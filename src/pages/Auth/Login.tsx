@@ -20,22 +20,18 @@ import {
 import { Link } from "react-router-dom";
 
 // Apps Imports
-import OtpModal, { OtpForm } from "../../components/Modals/OtpModal";
+import OtpModal from "../../components/Modals/OtpModal";
 import { AuthContext } from "../../contexts/auth";
 import { getLoginSchema } from "../../helpers/schemas";
 import { API, CAPTCHA_KEY, ROLE, ROUTES } from "../../helpers/constants";
 import { useApi, FieldError, isInitState } from "../../helpers/api";
-
-type LoginForm = {
-  email: string;
-  password: string;
-  recaptchaResponse: string;
-};
+import { IForgotForm, ILoginForm, IOtpForm } from "../../helpers/interfaces";
+import { ObjectSchema } from "yup";
 
 const Login: React.FC = () => {
   // Hooks
   const { t } = useTranslation();
-  const { logged } = React.useContext(AuthContext);
+  const authContext = React.useContext(AuthContext);
   const [verifyToken, setverifyToken] = React.useState<string | null>(null);
   const [showOtpModal, setShowOtpModal] = React.useState(false);
   const recaptchaRef = React.useRef<any>();
@@ -44,17 +40,21 @@ const Login: React.FC = () => {
 
   // Form Validations
   const validationSchema = getLoginSchema(t);
-  const formOptions = { resolver: yupResolver(validationSchema) };
+
   const {
     register,
     handleSubmit,
     setError,
     watch,
     formState: { errors },
-  } = useForm<LoginForm>(formOptions);
+  } = useForm<ILoginForm>({
+    resolver: yupResolver<ILoginForm>(
+      validationSchema as ObjectSchema<ILoginForm>
+    ),
+  });
 
   // APIs
-  const { state, sendRequest, reset } = useApi(API.LOGIN);
+  const { state: stateLogin, sendRequest, reset } = useApi(API.LOGIN);
   const {
     state: stateVerify2FA,
     sendRequest: sendRequest2FA,
@@ -63,54 +63,41 @@ const Login: React.FC = () => {
 
   // Effects
   React.useEffect(() => {
-    const response = state.data;
-    if (response && response.status === 201) {
-      const data = response.data.data;
-      if (data.is2FAEnabled) {
+    const response = stateLogin.data;
+
+    if (response && response.status === 200) {
+      const responseData = response.data;
+      const user = responseData.data;
+
+      if (user.is2FAEnabled) {
         // Show Otp Modal
         setShowOtpModal(true);
       } else {
-        logged({
-          token: data.token,
-          user: data.user,
+        authContext.doLogin({
+          user,
         });
-        try {
-          const redirectTo: string =
-            data.user.role == ROLE.ADMIN
-              ? ROUTES.ADMIN_SETTING
-              : ROUTES.DASHBOARD;
-          navigate(redirectTo);
-        } catch (e) {
-          navigate(ROUTES.DASHBOARD);
-        }
+
+        navigate(ROUTES.DASHBOARD);
       }
     }
-  }, [state]);
+  }, [stateLogin]);
 
-  React.useEffect(() => {
-    const response = stateVerify2FA.data;
-    if (response && response.status === 200) {
-      const data = response.data.data;
-      logged({
-        token: data.token,
-        user: data.user,
-      });
-      try {
-        const redirectTo: string =
-          data.user.role == ROLE.ADMIN
-            ? ROUTES.ADMIN_SETTING
-            : ROUTES.DASHBOARD;
-        navigate(redirectTo, { replace: true });
-      } catch (e) {
-        navigate(ROUTES.DASHBOARD, { replace: true });
-      }
-    }
-  }, [stateVerify2FA]);
+  // React.useEffect(() => {
+  //   const response = stateVerify2FA.data;
+  //   if (response && response.status === 200) {
+  //     const data = response.data.data;
+  //     authContext.doLogin({
+  //       token: data.token,
+  //       user: data.user,
+  //     });
 
-  // Reset api status when input value is changed
+  //     navigate(ROUTES.DASHBOARD, { replace: true });
+  //   }
+  // }, [stateVerify2FA]);
+
   React.useEffect(() => {
     const subscription = watch(() => {
-      if (!isInitState(state)) {
+      if (!isInitState(stateLogin)) {
         reset();
       }
     });
@@ -122,28 +109,31 @@ const Login: React.FC = () => {
     setverifyToken(token);
   };
 
-  const onSubmit = async (data: LoginForm) => {
-    if (verifyToken === null || verifyToken === "") {
-      setError("recaptchaResponse", {
-        type: "required",
-        message: t("Please perform man-machine certification. "),
-      });
-      return;
-    }
-    const loginInfo = await sendRequest({
+  const onSubmit = (data: ILoginForm) => {
+    // if (verifyToken === null || verifyToken === "") {
+    //   setError("recaptchaResponse", {
+    //     type: "required",
+    //     message: t("Please perform man-machine certification. "),
+    //   });
+    //   return;
+    // }
+
+    sendRequest({
       method: "post",
-      data: {
-        ...data,
-        recaptchaResponse: verifyToken,
+      data: null,
+      withCredentials: true,
+      headers: {
+        Authorization: "Basic " + window.btoa(data.email + ":" + data.password),
       },
     });
-    loginInfo.error && recaptchaRef.current.reset();
   };
 
-  const onSubmitOtp = (otpData: OtpForm) => {
-    const response = state.data;
+  const onSubmitOtp = (otpData: IOtpForm) => {
+    const response = stateLogin.data;
+
     if (response && response.status === 201) {
       const data = response.data.data;
+
       if (data.is2FAEnabled) {
         // Show Otp Modal
         sendRequest2FA({
@@ -167,9 +157,9 @@ const Login: React.FC = () => {
         <Col lg="8" xl="6">
           <Card>
             <Card.Body>
-              {state.isError && state.errors ? (
+              {stateLogin.isError && stateLogin.errors ? (
                 <Alert variant="danger">
-                  {state.errors.map((field: FieldError, key: number) => {
+                  {stateLogin.errors.map((field: FieldError, key: number) => {
                     return (
                       <React.Fragment key={key}>
                         <p>{`${t(field.name.toUpperCase())}`}</p>
@@ -185,6 +175,7 @@ const Login: React.FC = () => {
                   })}
                 </Alert>
               ) : null}
+
               {stateVerify2FA.isError && stateVerify2FA.errors ? (
                 <Alert variant="danger">
                   {stateVerify2FA.errors.map(
@@ -226,7 +217,7 @@ const Login: React.FC = () => {
                     {errors.password?.message}
                   </Form.Text>
                 </Form.Group>
-                <Form.Group className="mb-3">
+                {/* <Form.Group className="mb-3">
                   <ReCAPTCHA
                     ref={recaptchaRef}
                     sitekey={CAPTCHA_KEY}
@@ -235,12 +226,12 @@ const Login: React.FC = () => {
                   <Form.Text className="text-danger">
                     {errors.recaptchaResponse?.message}
                   </Form.Text>
-                </Form.Group>
+                </Form.Group> */}
                 <Button className="mt-3" type="submit">
                   {t("Login")}
                 </Button>
               </Form>
-              <Row>
+              {/* <Row>
                 <Col xs="6">
                   <Link to={ROUTES.FORGOT_PASSWORD}>
                     {t("Forgot your password?")}
@@ -251,7 +242,7 @@ const Login: React.FC = () => {
                     {t("Sign-up")}
                   </Link>
                 </Col>
-              </Row>
+              </Row> */}
             </Card.Body>
           </Card>
         </Col>

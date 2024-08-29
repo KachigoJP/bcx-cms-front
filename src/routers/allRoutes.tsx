@@ -9,82 +9,34 @@ const authRoutes = [
     path: ROUTES.DASHBOARD,
     component: React.lazy(() => import("../pages/Dashboard")),
   },
-  {
-    path: ROUTES.EXCHANGE,
-    component: React.lazy(() => import("../pages/Exchange")),
-  },
-  {
-    path: ROUTES.EXCHANGE_CONFIRM,
-    component: React.lazy(() => import("../pages/ExchangeConfirm")),
-  },
-  {
-    path: ROUTES.CARD,
-    component: React.lazy(() => import("../pages/Card")),
-  },
-  {
-    path: ROUTES.BALANCE,
-    component: React.lazy(() => import("../pages/Balance")),
-  },
-  {
-    path: ROUTES.TRANSACTION_HISTORY,
-    component: React.lazy(() => import("../pages/TransactionHistory")),
-  },
-  {
-    path: ROUTES.AFFILIATE,
-    component: React.lazy(() => import("../pages/Affiliate")),
-  },
-  {
-    path: ROUTES.NOTICE,
-    component: React.lazy(() => import("../pages/Notice")),
-  },
-  {
-    path: ROUTES.SUPPORT,
-    component: React.lazy(() => import("../pages/Support")),
-  },
-  {
-    path: ROUTES.CARD,
-    component: React.lazy(() => import("../pages/Card")),
-  },
-  {
-    path: ROUTES.KYC,
-    component: React.lazy(() => import("../pages/Kyc")),
-  },
   // Account
   {
     path: ROUTES.PROFILE,
-    component: React.lazy(() => import("../pages/Profile")),
+    component: React.lazy(() => import("../pages/Profile/Profile")),
   },
   {
     path: ROUTES.PROFILE_EDIT,
-    component: React.lazy(() => import("../pages/ProfileEdit")),
-  },
-  {
-    path: ROUTES.UPGRADE,
-    component: React.lazy(() => import("../pages/Upgrade")),
+    component: React.lazy(() => import("../pages/Profile/ProfileEdit")),
   },
   {
     path: ROUTES.PASSWORD_CHANGE,
-    component: React.lazy(() => import("../pages/PasswordChange")),
+    component: React.lazy(() => import("../pages/Profile/PasswordChange")),
   },
   {
     path: ROUTES.EMAIL_CHANGE,
-    component: React.lazy(() => import("../pages/EmailChange")),
+    component: React.lazy(() => import("../pages/Profile/EmailChange")),
   },
   {
     path: ROUTES.VERIFICATION_2FA,
-    component: React.lazy(() => import("../pages/2FA")),
-  },
-  {
-    path: ROUTES.BANK,
-    component: React.lazy(() => import("../pages/Bank")),
+    component: React.lazy(() => import("../pages/Profile/2FA")),
   },
   {
     path: ROUTES.VERIFY_CHANGE_EMAIL,
     component: React.lazy(() => import("../pages/Auth/VerifyChangeEmail")),
   },
   {
-    path: ROUTES.ADMIN_SETTING,
-    component: React.lazy(() => import("../pages/Admin/Setting")),
+    path: ROUTES.SETTING,
+    component: React.lazy(() => import("../pages/Setting")),
   },
   {
     path: ROUTES.HOME,
@@ -92,46 +44,18 @@ const authRoutes = [
     component: () => <Navigate to={ROUTES.DASHBOARD} />,
   },
 
-  // ADMIN
+  // USERS
   {
-    path: ROUTES.ADMIN_LIST_USER,
-    component: React.lazy(() => import("../pages/Admin/ListUser")),
+    path: ROUTES.USER_LIST,
+    component: React.lazy(() => import("../pages/Users/ListUser")),
   },
   {
-    path: ROUTES.ADMIN_UPDATE_USER,
-    component: React.lazy(() => import("../pages/Admin/UpdateUser")),
+    path: ROUTES.USER_UPDATE,
+    component: React.lazy(() => import("../pages/Users/UpdateUser")),
   },
   {
-    path: ROUTES.ADMIN_CREATE_USER,
-    component: React.lazy(() => import("../pages/Admin/CreateUser")),
-  },
-  {
-    path: ROUTES.ADMIN_NOTIFICATION,
-    component: React.lazy(() => import("../pages/Admin/Notification")),
-  },
-  {
-    path: ROUTES.ADMIN_CREATE_NOTIFICATION,
-    component: React.lazy(() => import("../pages/Admin/CreateNotification")),
-  },
-  {
-    path: ROUTES.ADMIN_UPDATE_NOTIFICATION,
-    component: React.lazy(() => import("../pages/Admin/UpdateNotification")),
-  },
-  {
-    path: ROUTES.ADMIN_UPGRADE_MASTER,
-    component: React.lazy(() => import("../pages/Admin/UpgradeMaster")),
-  },
-  {
-    path: ROUTES.ADMIN_LIST_MASTER,
-    component: React.lazy(() => import("../pages/Admin/ListMaster")),
-  },
-  {
-    path: ROUTES.ADMIN_FEE_SETTING,
-    component: React.lazy(() => import("../pages/Admin/FeeSetting")),
-  },
-  {
-    path: ROUTES.ADMIN_DEPOSIT_REPORT,
-    component: React.lazy(() => import("../pages/Admin/MasterDepositReport")),
+    path: ROUTES.USER_CREATE,
+    component: React.lazy(() => import("../pages/Users/CreateUser")),
   },
 ];
 
@@ -139,10 +63,6 @@ const nonAuthRoutes = [
   {
     path: ROUTES.LOGIN,
     component: React.lazy(() => import("../pages/Auth/Login")),
-  },
-  {
-    path: ROUTES.ADMIN_LOGIN,
-    component: React.lazy(() => import("../pages/Admin/Login")),
   },
   {
     path: ROUTES.REGISTER,

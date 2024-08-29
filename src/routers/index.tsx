@@ -1,34 +1,35 @@
 // React imports
-import React from 'react'
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import React from "react";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 // UI Imports
-import { Spinner } from 'react-bootstrap'
+import { Spinner } from "react-bootstrap";
 
 // App imports
-import { AuthContext } from '../contexts/auth'
-import NonLayout from '../components/Layout/NonLayout'
-import Layout from '../components/Layout'
-import NotFound from '../pages/Utility/404'
+import { AuthContext } from "../contexts/auth";
+import NonLayout from "../components/Layout/NonLayout";
+import Layout from "../components/Layout";
+import NotFound from "../pages/Utility/404";
 
-import { authRoutes, nonAuthRoutes } from './allRoutes'
-import { ROUTES } from '../helpers/constants'
+import { authRoutes, nonAuthRoutes } from "./allRoutes";
+import { ROUTES } from "../helpers/constants";
 
 type RouteProps = {
-  component: React.FC
-}
+  component: React.FC;
+};
 
 const AuthRoute: React.FC<RouteProps> = (props) => {
-  const { isAuthenticated } = React.useContext(AuthContext)
-  const navigate = useNavigate()
+  const { isAuthenticated } = React.useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const { component: Component } = props
+  const { component: Component } = props;
 
   React.useEffect(() => {
+    console.log("isAuthenticatedisAuthenticated", isAuthenticated);
     if (!isAuthenticated) {
-      navigate(ROUTES.LOGIN)
+      navigate(ROUTES.LOGIN);
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated]);
 
   return (
     <Layout>
@@ -36,8 +37,8 @@ const AuthRoute: React.FC<RouteProps> = (props) => {
         <Component />
       </React.Suspense>
     </Layout>
-  )
-}
+  );
+};
 
 const Routers: React.FC = () => {
   return (
@@ -65,7 +66,7 @@ const Routers: React.FC = () => {
       ))}
       <Route path="*" element={<NotFound />} />
     </Routes>
-  )
-}
+  );
+};
 
-export default Routers
+export default Routers;

@@ -16,17 +16,17 @@ import {
   Spinner,
   Modal,
 } from "react-bootstrap";
-import OtpModal, { OtpForm } from "../components/Modals/OtpModal";
-import ResponseModal from "../components/Modals/ResponseModal";
+import OtpModal from "../../components/Modals/OtpModal";
+import ResponseModal from "../../components/Modals/ResponseModal";
 
 // Apps Imports
-import { AuthContext } from "../contexts/auth";
-import { useApi, FieldError } from "../helpers/api";
-import { ROUTES, API } from "../helpers/constants";
-import Countries from "../assets/json/countries.json";
-import PhoneCodes from "../assets/json/phone_codes.json";
-import { getProfileFormSchema } from "../helpers/schemas";
-import { IProfileForm } from "../helpers/interfaces";
+import { AuthContext } from "../../contexts/auth";
+import { useApi, FieldError } from "../../helpers/api";
+import { ROUTES, API } from "../../helpers/constants";
+import Countries from "../../assets/json/countries.json";
+import PhoneCodes from "../../assets/json/phone_codes.json";
+import { getProfileFormSchema } from "../../helpers/schemas";
+import { IOtpForm, IProfileForm } from "../../helpers/interfaces";
 
 const Profile: React.FC = () => {
   // Hooks
@@ -62,7 +62,7 @@ const Profile: React.FC = () => {
   }, [state]);
 
   // Methods
-  const onSubmitOtp = (otpData: OtpForm) => {
+  const onSubmitOtp = (otpData: IOtpForm) => {
     setShowOtpModal(false);
     if (submitData) processExecute(submitData, otpData.otpToken);
   };
@@ -78,7 +78,7 @@ const Profile: React.FC = () => {
     }
   };
 
-  const processExecute = (sendData: OtpForm, otp?: number) => {
+  const processExecute = (sendData: IOtpForm, otp?: number) => {
     if (otp && sendData) {
       sendData.otpToken = otp;
     }
@@ -103,29 +103,6 @@ const Profile: React.FC = () => {
   return (
     <div className="main-content">
       {/* Breadcrumb */}
-      <nav className="page-breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <Link to={ROUTES.HOME}>{t("Home")}</Link>
-          </li>
-          <li className="breadcrumb-item">
-            <Link to={ROUTES.PROFILE}>{t("Profile Detail")}</Link>
-          </li>
-          <li className="breadcrumb-item active" aria-current="page">
-            {t("Setting")}
-          </li>
-        </ol>
-        <Card>
-          <Card.Body>
-            <ul>
-              <li>
-                <span>{t("Edit")}</span>
-              </li>
-              <li></li>
-            </ul>
-          </Card.Body>
-        </Card>
-      </nav>
       {state.isError && state.errors ? (
         <Alert variant="danger">
           {state.errors.map((field: FieldError, key: number) => {

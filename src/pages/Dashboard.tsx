@@ -1,56 +1,36 @@
 // React Imports
-import React from 'react'
-import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
-import moment from 'moment'
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import moment from "moment";
 
 // UI Imports
-import { Row, Col, Card, Table, Accordion } from 'react-bootstrap'
+import { Row, Col, Card, Table, Accordion } from "react-bootstrap";
 
 // Apps Imports
-import { useApi } from '../helpers/api'
-import { API, ROUTES } from '../helpers/constants'
+import { useApi } from "../helpers/api";
+import { API, ROUTES } from "../helpers/constants";
 
 const Dashboard: React.FC = () => {
   // Hooks
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   // APIs
-  const { state: stateHistory, sendRequest: sendRequestHistory } = useApi(
-    API.TRANSACTION_HISTORY
-  )
-  const { state: stateBalance, sendRequest: sendRequestBalance } = useApi(
-    API.BALANCE
-  )
-  const { state: stateNotification, sendRequest: sendRequestNotification } =
-    useApi(API.NOTIFICATION)
+
   // Effects
   React.useEffect(() => {
-    if (!stateHistory.data) {
-      sendRequestHistory({
-        method: 'get',
-        params: {
-          page: 1,
-        },
-      })
-    }
-    if (!stateBalance.data) sendRequestBalance()
-    if (!stateNotification.data) sendRequestNotification()
-    return () => {}
-  }, [])
+    return () => {};
+  }, []);
 
   // Methods
 
   // Values
 
-  const annoucements = stateNotification?.data?.data?.data
-  const balances = stateBalance?.data?.data?.data
-  const transactions = stateHistory?.data?.data?.data
   return (
     <div className="main-content">
       <div className="d-flex justify-content-between align-items-center flex-wrap grid-margin">
         <div>
-          <h4 className="mb-3 mb-md-0">{t('Welcome to Dashboard')}</h4>
+          <h4 className="mb-3 mb-md-0">{t("Welcome to Dashboard")}</h4>
         </div>
       </div>
       <Row>
@@ -59,11 +39,11 @@ const Dashboard: React.FC = () => {
             <Card.Body>
               <Card.Title>
                 <Row>
-                  <Col>{t('Annoucements')}</Col>
+                  <Col>{t("User")}</Col>
                 </Row>
               </Card.Title>
               <Accordion className="m-3">
-                {annoucements?.length > 0
+                {/* {annoucements?.length > 0
                   ? annoucements.slice(0, 5).map((item: any, idx: number) => {
                       return (
                         <Accordion.Item key={idx} eventKey={idx.toString()}>
@@ -83,16 +63,16 @@ const Dashboard: React.FC = () => {
                         </Accordion.Item>
                       )
                     })
-                  : null}
+                  : null} */}
               </Accordion>
-              <div className="text-center mt-5">
+              {/* <div className="text-center mt-5">
                 <Link
                   to={ROUTES.NOTICE}
                   className="btn btn-outline-primary border border-primary"
                 >
                   {t('See more')}
                 </Link>
-              </div>
+              </div> */}
             </Card.Body>
           </Card>
 
@@ -100,12 +80,12 @@ const Dashboard: React.FC = () => {
             <Card.Body>
               <Card.Title>
                 <Row>
-                  <Col>{t('Trading History')}</Col>
+                  <Col>{t("Donate")}</Col>
                 </Row>
               </Card.Title>
               <Table responsive striped hover size="sm">
                 <colgroup>
-                  <col style={{ width: '25%' }}></col>
+                  <col style={{ width: "25%" }}></col>
                   <col></col>
                   <col></col>
                   <col></col>
@@ -113,16 +93,14 @@ const Dashboard: React.FC = () => {
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>{t('Date')}</th>
-                    <th>{t('Account Number/eWallet Address')}</th>
-                    <th>{t('Action Type')}</th>
-                    <th>{t('Amount')}</th>
-                    <th>{t('Currency')}</th>
-                    <th>{t('Status')}</th>
+                    <th>{t("Date")}</th>
+                    <th>{t("Amount")}</th>
+                    <th>{t("Currency")}</th>
+                    <th>{t("Status")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions?.data.length > 0 ? (
+                  {/* {transactions?.data.length > 0 ? (
                     transactions?.data
                       .slice(0, 10)
                       .map((item: any, idx: number) => {
@@ -149,17 +127,17 @@ const Dashboard: React.FC = () => {
                         {t('No record')}
                       </td>
                     </tr>
-                  )}
+                  )} */}
                 </tbody>
               </Table>
-              <div className="text-center mt-5">
+              {/* <div className="text-center mt-5">
                 <Link
                   to={ROUTES.TRANSACTION_HISTORY}
                   className="btn btn-outline-primary border border-primary"
                 >
                   {t('See more')}
                 </Link>
-              </div>
+              </div> */}
             </Card.Body>
           </Card>
         </Col>
@@ -168,18 +146,18 @@ const Dashboard: React.FC = () => {
             <Card.Body>
               <Card.Title>
                 <Row>
-                  <Col>{t('Balance Information')}</Col>
+                  <Col>{t("Trip")}</Col>
                 </Row>
               </Card.Title>
               <Table responsive>
                 <thead>
                   <tr>
-                    <th>{t('Currency Type')}</th>
-                    <th>{t('Amount')}</th>
+                    <th>{t("Currency Type")}</th>
+                    <th>{t("Amount")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {balances?.length > 0 ? (
+                  {/* {balances?.length > 0 ? (
                     balances.map((ktem: any, idx: number) => {
                       return (
                         <tr key={idx}>
@@ -192,15 +170,15 @@ const Dashboard: React.FC = () => {
                     <tr>
                       <td colSpan={2}>{t('No record')}</td>
                     </tr>
-                  )}
+                  )} */}
                 </tbody>
               </Table>
               <div className="text-center mt-5">
                 <Link
-                  to={ROUTES.BALANCE}
+                  to={ROUTES.DASHBOARD}
                   className="btn btn-outline-primary border border-primary"
                 >
-                  {t('See more')}
+                  {t("See more")}
                 </Link>
               </div>
             </Card.Body>
@@ -208,7 +186,7 @@ const Dashboard: React.FC = () => {
         </Col>
       </Row>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

@@ -17,14 +17,14 @@ import {
   Modal,
   Spinner,
 } from "react-bootstrap";
-import OtpModal, { OtpForm } from "../components/Modals/OtpModal";
+import OtpModal from "../../components/Modals/OtpModal";
 
 // Apps Imports
-import { AuthContext } from "../contexts/auth";
-import { getChangePassSchema } from "../helpers/schemas";
-import { useApi, FieldError } from "../helpers/api";
-import { API, ROUTES } from "../helpers/constants";
-import { IChangePassForm } from "../helpers/interfaces";
+import { AuthContext } from "../../contexts/auth";
+import { getChangePassSchema } from "../../helpers/schemas";
+import { useApi, FieldError } from "../../helpers/api";
+import { API, ROUTES } from "../../helpers/constants";
+import { IChangePassForm, IOtpForm } from "../../helpers/interfaces";
 
 const PasswordChange: React.FC = () => {
   // Hooks
@@ -72,7 +72,7 @@ const PasswordChange: React.FC = () => {
     setShowConfirmModal(true);
   };
 
-  const onSubmitOtp = (otpData: OtpForm) => {
+  const onSubmitOtp = (otpData: IOtpForm) => {
     setShowOtpModal(false);
     sendRequest({
       method: "put",
@@ -105,28 +105,6 @@ const PasswordChange: React.FC = () => {
   };
   return (
     <div className="main-content">
-      {/* Breadcrumb */}
-      <nav className="page-breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <Link to={ROUTES.HOME}>{t("Home")}</Link>
-          </li>
-          <li className="breadcrumb-item active" aria-current="page">
-            {t("Change Password")}
-          </li>
-        </ol>
-        <Card>
-          <Card.Body>
-            <ul>
-              <li>
-                <span>{t("Change Password")}</span>
-              </li>
-              <li></li>
-            </ul>
-          </Card.Body>
-        </Card>
-      </nav>
-
       {/* Body */}
       <Card>
         <Card.Body>

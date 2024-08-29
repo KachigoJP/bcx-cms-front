@@ -1,17 +1,17 @@
-import { API_ACTION_TYPES, REGISTER_ACTION_TYPES } from './constants'
-import { RegisterState } from './types'
+import { API_ACTION_TYPES, REGISTER_ACTION_TYPES } from "./constants";
+import { RegisterState } from "./interfaces/types";
 
 type Action<T> = {
-  type: string
-  payload?: T
-}
+  type: string;
+  payload?: T;
+};
 
 export type AuthState<T> = {
-  isLoading: boolean
-  isError: boolean
-  data?: T | null
-  errors?: T | null
-}
+  isLoading: boolean;
+  isError: boolean;
+  data?: T | null;
+  errors?: T | null;
+};
 
 export function fetchReducer<T>(
   state: AuthState<T>,
@@ -25,21 +25,21 @@ export function fetchReducer<T>(
         isError: false,
         data: null,
         errors: null,
-      }
+      };
     case API_ACTION_TYPES.FETCH_SUCCESS:
       return {
         ...state,
         isLoading: false,
         isError: false,
         data: action.payload,
-      }
+      };
     case API_ACTION_TYPES.FETCH_FAILURE:
       return {
         ...state,
         isLoading: false,
         isError: true,
         errors: action.payload,
-      }
+      };
     case API_ACTION_TYPES.FETCH_RESET:
       return {
         ...state,
@@ -47,9 +47,9 @@ export function fetchReducer<T>(
         isError: false,
         data: null,
         errors: null,
-      }
+      };
     default:
-      throw new Error()
+      throw new Error();
   }
 }
 
@@ -57,15 +57,13 @@ export function RegisterReducer(
   state: RegisterState,
   action: Action<RegisterState>
 ): RegisterState {
-  const payload = action.payload
+  const payload = action.payload;
   switch (action.type) {
     case REGISTER_ACTION_TYPES.CHECK_EMAIL_FINISH:
       return {
         ...state,
         email: payload?.email,
-        affiliateCode: payload?.affiliateCode,
-        applicantType: payload?.applicantType,
-      }
+      };
     case REGISTER_ACTION_TYPES.INPUT_INFO_FINISH:
       return {
         ...state,
@@ -75,14 +73,14 @@ export function RegisterReducer(
         firstName: payload?.firstName,
         lastName: payload?.lastName,
         dateOfBirth: payload?.dateOfBirth,
-      }
+      };
     case REGISTER_ACTION_TYPES.AGREE_FINISH:
       return {
         ...state,
         termsAndCondition: payload?.termsAndCondition,
         recaptchaResponse: payload?.recaptchaResponse,
-      }
+      };
     default:
-      throw new Error()
+      throw new Error();
   }
 }

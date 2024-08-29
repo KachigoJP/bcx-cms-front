@@ -19,17 +19,12 @@ import {
 } from "react-bootstrap";
 
 // Apps Imports
-import { AuthContext } from "../contexts/auth";
-import OtpModal, { OtpForm } from "../components/Modals/OtpModal";
-import { useApi, FieldError } from "../helpers/api";
-import { API, ROUTES } from "../helpers/constants";
-import { getChangeEmailSchema } from "../helpers/schemas";
-
-type ChangeMailForm = {
-  email: string;
-  confirmEmail: string;
-  otpToken?: number;
-};
+import { AuthContext } from "../../contexts/auth";
+import OtpModal from "../../components/Modals/OtpModal";
+import { useApi, FieldError } from "../../helpers/api";
+import { API, ROUTES } from "../../helpers/constants";
+import { getChangeEmailSchema } from "../../helpers/schemas";
+import { IChangeMailForm, IOtpForm } from "../../helpers/interfaces";
 
 const EmailChange: React.FC = () => {
   // Hooks
@@ -38,18 +33,19 @@ const EmailChange: React.FC = () => {
   const [showResultModal, setShowResultModal] = React.useState(false);
   const [showConfirmModal, setShowConfirmModal] = React.useState(false);
   const [showOtpModal, setShowOtpModal] = React.useState(false);
-  const [submitData, setSubmitData] = React.useState<ChangeMailForm | null>(
+  const [submitData, setSubmitData] = React.useState<IChangeMailForm | null>(
     null
   );
 
   // Form Validations
   const validationSchema = getChangeEmailSchema(t);
-  const formOptions = { resolver: yupResolver(validationSchema) };
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ChangeMailForm>(formOptions);
+  } = useForm<IChangeMailForm>({
+    resolver: yupResolver<IChangeMailForm>(validationSchema),
+  });
 
   // APIs
   const { state, sendRequest, reset } = useApi(API.CHANGE_EMAIL);
@@ -66,7 +62,7 @@ const EmailChange: React.FC = () => {
   }, [state]);
 
   // Methods
-  const onSubmitOtp = (otpData: OtpForm) => {
+  const onSubmitOtp = (otpData: IOtpForm) => {
     setShowOtpModal(false);
     processExecute(otpData.otpToken);
   };
@@ -74,7 +70,7 @@ const EmailChange: React.FC = () => {
     reset();
   };
 
-  const onSubmit = (data: ChangeMailForm) => {
+  const onSubmit = (data: IChangeMailForm) => {
     setSubmitData(data);
     setShowConfirmModal(true);
   };
@@ -114,28 +110,6 @@ const EmailChange: React.FC = () => {
 
   return (
     <div className="main-content">
-      {/* Breadcrumb */}
-      <nav className="page-breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <Link to={ROUTES.HOME}>{t("Home")}</Link>
-          </li>
-          <li className="breadcrumb-item active" aria-current="page">
-            {t("Change Email")}
-          </li>
-        </ol>
-        <Card>
-          <Card.Body>
-            <ul>
-              <li>
-                <span>{t("Change Email")}</span>
-              </li>
-              <li></li>
-            </ul>
-          </Card.Body>
-        </Card>
-      </nav>
-
       {/* Body */}
       <Card>
         <Card.Body>

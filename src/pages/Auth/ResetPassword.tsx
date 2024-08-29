@@ -26,14 +26,7 @@ import DatePicker from "../../components/Components/DatePicker";
 import { getResetPassSchema } from "../../helpers/schemas";
 import { useApi, FieldError } from "../../helpers/api";
 import { API, ROUTES } from "../../helpers/constants";
-
-type ForgotForm = {
-  confirmationCode: string;
-  password: string;
-  confirmPassword: string;
-  dateOfBirth: string;
-  emailToken: string;
-};
+import { IResetForm } from "../../helpers/interfaces";
 
 const ResetPassword: React.FC = () => {
   // Hooks
@@ -44,13 +37,15 @@ const ResetPassword: React.FC = () => {
 
   // Form Validations
   const validationSchema = getResetPassSchema(t);
-  const formOptions = { resolver: yupResolver(validationSchema) };
+
   const {
     register,
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<ForgotForm>(formOptions);
+  } = useForm<IResetForm>({
+    resolver: yupResolver<IResetForm>(validationSchema),
+  });
 
   // APIs
   const { state: stateVerify, sendRequest: sendRequestVerify } = useApi(
@@ -82,7 +77,7 @@ const ResetPassword: React.FC = () => {
   const emailToken: any = searchParams.get("emailToken");
 
   // Methods
-  const onSubmit = (data: ForgotForm) => {
+  const onSubmit = (data: IResetForm) => {
     sendRequest({
       method: "post",
       data: {

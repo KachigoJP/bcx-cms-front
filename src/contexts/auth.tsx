@@ -1,109 +1,85 @@
-import React, { useEffect } from 'react'
-import { useCookies } from 'react-cookie'
+import React, { useEffect } from "react";
+import { useCookies } from "react-cookie";
 
 // app imports
-import { COOKIES } from '../helpers/constants'
-import { AuthUser } from '../helpers/types'
-import { useApi } from '../helpers/api'
-import { API } from '../helpers/constants'
+import { COOKIES } from "../helpers/constants";
+import { AuthUser } from "../helpers/interfaces/types";
+import { useApi } from "../helpers/api";
+import { API } from "../helpers/constants";
 
 type AuthProps = {
-  isAuthenticated: boolean
-  logged: Function
-  logout: Function
-  user: AuthUser
-  fetchUser: Function
-  setRole: Function
-}
+  isAuthenticated: boolean;
+  doLogin: Function;
+  logout: Function;
+  user: AuthUser;
+  fetchUser: Function;
+};
 
 export const AuthContext = React.createContext<AuthProps>({
   isAuthenticated: false,
-  logged: () => {},
+  doLogin: () => {},
   logout: () => {},
   user: null,
   fetchUser: () => {},
-  setRole: (role: string) => {},
-})
-
-const checkAuthenticated = (cookies: any) => {
-  return (
-    cookies[COOKIES.AUTH_TOKEN] != null &&
-    typeof cookies[COOKIES.AUTH_TOKEN] !== 'undefined'
-  )
-}
+});
 
 const AuthProvider = (props: any) => {
-  const [cookies, setCookie, removeCookie] = useCookies([COOKIES.AUTH_TOKEN])
+  const [cookies] = useCookies([COOKIES.AUTH_USER]);
+
+  console.log(
+    "COOKIE",
+    cookies[COOKIES.AUTH_USER] != null &&
+      typeof cookies[COOKIES.AUTH_USER] !== "undefined"
+  );
+
   const [isAuthenticated, setAuthenticated] = React.useState(
-    checkAuthenticated(cookies)
-  )
-  const [authUser, setAuthUser] = React.useState<AuthUser>(null)
+    cookies[COOKIES.AUTH_USER] != null &&
+      typeof cookies[COOKIES.AUTH_USER] !== "undefined"
+  );
+  const [authUser, setAuthUser] = React.useState<AuthUser>(null);
 
   // APIs
-  const { state, sendRequest } = useApi(API.USER_GET_INFORMATION)
-
-  useEffect(() => {
-    // Check Token
-    if (cookies[COOKIES.AUTH_TOKEN]) {
-      setAuthenticated(true)
-      setAuthUser(cookies[COOKIES.AUTH_USER])
-    }
-    return () => {}
-  }, [])
+  const { state: stateProfile, sendRequest } = useApi(API.PROFILE);
 
   React.useEffect(() => {
-    const response = state.data
+    const response = stateProfile.data;
     if (response && response.status === 200) {
-      const user = response.data.data
-      setAuthUser(user)
-      setCookie(COOKIES.AUTH_USER, user)
+      const user = response.data;
+      setAuthUser(user);
     }
-    return () => {}
-  }, [state])
+    return () => {};
+  }, [stateProfile]);
 
-  const logged = (data: any) => {
-    // Call API login
-    setCookie(COOKIES.AUTH_TOKEN, data.token)
-    setCookie(COOKIES.AUTH_USER, data.user)
-    setAuthenticated(true)
-
-    setAuthUser(data.user)
-  }
+  const doLogin = (data: any) => {
+    setAuthenticated(true);
+    setAuthUser(data.user);
+  };
 
   const logout = () => {
-    // Call API logout
-    removeCookie(COOKIES.AUTH_TOKEN)
-    removeCookie(COOKIES.AUTH_USER)
-    setAuthUser(null)
-    setAuthenticated(false)
-  }
+    setAuthUser(null);
+    setAuthenticated(false);
+  };
 
   const fetchUser = () => {
     // Call API get latest user info
     sendRequest({
-      method: 'get',
-    })
-  }
+      method: "get",
+    });
+  };
 
-  const setRole = (role: string) => {
-    // Call API get latest user info
-    const user = cookies[COOKIES.AUTH_USER]
-    setAuthUser({ ...user, role })
-  }
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        logged,
+        doLogin,
         logout,
         user: authUser,
         fetchUser,
-        setRole,
       }}
     >
       <>{props.children}</>
     </AuthContext.Provider>
-  )
-}
+  );
+};
 
-export default AuthProvider
+export default AuthProvider;

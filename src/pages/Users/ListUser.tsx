@@ -1,7 +1,7 @@
 // React Imports
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, generatePath } from "react-router-dom";
 
 // UI Imports
 import {
@@ -14,15 +14,14 @@ import {
   Modal,
   Button,
   Spinner,
-  Alert,
 } from "react-bootstrap";
-import { MdOutlineCheckCircle } from "react-icons/md";
+import { MdDelete, MdEdit, MdOutlineCheckCircle } from "react-icons/md";
 
 // Apps Imports
-import { FieldError, useApi } from "../../helpers/api";
+import { useApi } from "../../helpers/api";
 import { ROUTES, API } from "../../helpers/constants";
 
-const UpgradeMaster: React.FC = () => {
+const ListUser: React.FC = () => {
   // Hooks
   const { t } = useTranslation();
   let [searchParams, setSearchParams] = useSearchParams();
@@ -31,14 +30,14 @@ const UpgradeMaster: React.FC = () => {
     searchParams.get("search")
   );
 
-  const [showConfirmModal, setshowConfirmModal] = React.useState(false);
+  const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const [showResultModal, setShowResultModal] = React.useState(false);
-  const [selected, setSelected] = React.useState(null as any);
+  const [deleteId, setDeleteId] = React.useState("");
 
   // APIs
-  const { state, sendRequest } = useApi(API.ADMIN_LIST_NON_MASTER);
-  const { state: stateUpgrade, sendRequest: sendUpgradeRequest } = useApi(
-    API.ADMIN_UPGRADE_MASTER
+  const { state, sendRequest } = useApi(API.ADMIN_LIST_USER);
+  const { state: stateDelete, sendRequest: sendDeleteRequest } = useApi(
+    API.ADMIN_DELETE_USER
   );
 
   // Effects
@@ -54,13 +53,12 @@ const UpgradeMaster: React.FC = () => {
     }
     return () => {};
   }, []);
-
   React.useEffect(() => {
-    if (stateUpgrade.errors) {
+    if (stateDelete.errors) {
       setShowResultModal(false);
     }
     return () => {};
-  }, [stateUpgrade]);
+  }, [stateDelete]);
 
   // Methods
   const onChangeSearch = (event: any) => {
@@ -92,27 +90,27 @@ const UpgradeMaster: React.FC = () => {
     });
     setSearchParams(params);
   };
-  const onClickUpgrade = (item: any) => () => {
-    setSelected(item);
-    setshowConfirmModal(true);
+  const onClickDelete = (id: string) => () => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
   };
 
-  const closeConfirmModal = () => {
-    setSelected(null);
-    setshowConfirmModal(false);
+  const closeDeleteModal = () => {
+    setDeleteId("");
+    setShowDeleteModal(false);
   };
-  const onClickConfirm = () => {
-    sendUpgradeRequest({
-      url: API.ADMIN_UPGRADE_MASTER.replace(":id", selected.id),
-      method: "post",
+  const clickConfirmDelete = () => {
+    sendDeleteRequest({
+      method: "delete",
+      url: `${API.ADMIN_DELETE_USER}/${deleteId}`,
     });
-    setshowConfirmModal(false);
+    setShowDeleteModal(false);
     setShowResultModal(true);
   };
 
   const closeResultModal = () => {
     setShowResultModal(false);
-    if (stateUpgrade.data) {
+    if (stateDelete.data) {
       const params: any = {
         page,
         search,
@@ -130,42 +128,12 @@ const UpgradeMaster: React.FC = () => {
   const totalPage = tableData?.totalPage | 1;
   return (
     <div className="main-content">
-      {/* Breadcrumb */}
-      <nav className="page-breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <Link to={ROUTES.HOME}>{t("Home")}</Link>
-          </li>
-          <li className="breadcrumb-item active" aria-current="page">
-            {t("Upgrade Master User")}
-          </li>
-        </ol>
-      </nav>
-      {stateUpgrade.isError && stateUpgrade.errors ? (
-        <Alert variant="danger">
-          {stateUpgrade.errors.map((field: FieldError, key: number) => {
-            return (
-              <React.Fragment key={key}>
-                <p>{`${t(field.name.toUpperCase())}`}</p>
-                {field.errors
-                  ? Object.values(field.errors).map(
-                      (value: string, idx: number) => {
-                        return <li key={idx}>{value}</li>;
-                      }
-                    )
-                  : null}
-              </React.Fragment>
-            );
-          })}
-        </Alert>
-      ) : null}
-
       {/* Body */}
       <Card>
         <Card.Body>
           <Card.Title>
             <Row>
-              <Col>
+              <Col lg={5}>
                 <Form.Group as={Row} className="me-5">
                   <Form.Label column>{t("Search")}</Form.Label>
                   <Form.Control
@@ -175,6 +143,11 @@ const UpgradeMaster: React.FC = () => {
                     onChange={onChangeSearch}
                   />
                 </Form.Group>
+              </Col>
+              <Col md={2} className="d-flex align-items-end">
+                <Link to={ROUTES.USER_CREATE} className="btn btn-primary">
+                  {t("Create User")}
+                </Link>
               </Col>
             </Row>
           </Card.Title>
@@ -187,6 +160,8 @@ const UpgradeMaster: React.FC = () => {
                   <th>{t("First Name")}</th>
                   <th>{t("Last Name")}</th>
                   <th>{t("Account Number")}</th>
+                  <th>{t("Account Level")}</th>
+                  <th>{t("Applicant Type")}</th>
                   <th>{t("Action")}</th>
                 </tr>
               </thead>
@@ -200,17 +175,26 @@ const UpgradeMaster: React.FC = () => {
                         <td>{item.firstName}</td>
                         <td>{item.lastName}</td>
                         <td>{item.accountNumber}</td>
+                        <td>{t(item.accountLevel)}</td>
+                        <td>{t(item.applicantType)}</td>
                         <td>
-                          <Button onClick={onClickUpgrade(item)}>
-                            {t("Upgrade")}
-                          </Button>
+                          <Link
+                            to={generatePath(ROUTES.USER_UPDATE, {
+                              id: item.id,
+                            })}
+                          >
+                            <MdEdit size={24} className="me-3 text-primary" />
+                          </Link>
+                          <Link to="#" onClick={onClickDelete(item.id)}>
+                            <MdDelete size={24} className="text-danger" />
+                          </Link>
                         </td>
                       </tr>
                     );
                   })
                 ) : (
                   <tr>
-                    <td colSpan={8} className="text-center">
+                    <td colSpan={7} className="text-center">
                       {t("No record")}
                     </td>
                   </tr>
@@ -242,20 +226,22 @@ const UpgradeMaster: React.FC = () => {
           </div>
         </Card.Body>
 
-        {/* CONFIRM MODAL */}
-        <Modal show={showConfirmModal} onHide={closeConfirmModal} centered>
-          <Modal.Title></Modal.Title>
+        {/* Delete Modal */}
+        <Modal show={showDeleteModal} onHide={closeDeleteModal} centered>
           <Modal.Body className="text-center">
-            <h3>{t("Upgrade Master User")}</h3>
-            {t("Do you want upgrade this user to Master User?")}
+            <MdDelete size="3em" color="#dc3545" />
+            <h3>{t("Delete user")}</h3>
+            {t(
+              "Warning! Once you delete the account there's no getting it back. Make sure you want to delete it"
+            )}
           </Modal.Body>
           <Modal.Footer className="justify-content-center">
-            <Button onClick={closeConfirmModal}>{t("Close")}</Button>
-            <Button onClick={onClickConfirm}>{t("Confirm")}</Button>
+            <Button onClick={closeDeleteModal}>{t("Close")}</Button>
+            <Button onClick={clickConfirmDelete}>{t("Delete")}</Button>
           </Modal.Footer>
         </Modal>
 
-        {/* Result Modal */}
+        {/* Delete Result Modal */}
         <Modal
           show={showResultModal}
           onHide={closeResultModal}
@@ -263,12 +249,12 @@ const UpgradeMaster: React.FC = () => {
           backdrop="static"
         >
           <Modal.Body className="text-center">
-            {!stateUpgrade.isLoading && stateUpgrade.data ? (
+            {!stateDelete.isLoading && stateDelete.data ? (
               <>
                 <MdOutlineCheckCircle size="5em" color="#00C851" />
-                <h3>{t("User Upgraded")}</h3>
-                {t("User {{ email }} has been successfully upgraded", {
-                  email: selected.email || "empty",
+                <h3>{t("User Deleted")}</h3>
+                {t("User {{ email }} is successful deleted", {
+                  email: stateDelete?.data?.data?.data?.email || "empty",
                 })}
               </>
             ) : (
@@ -281,9 +267,9 @@ const UpgradeMaster: React.FC = () => {
             )}
           </Modal.Body>
           <Modal.Footer className="justify-content-center">
-            {!stateUpgrade.isLoading && stateUpgrade.data ? (
+            {!stateDelete.isLoading && stateDelete.data ? (
               <>
-                <Button onClick={closeResultModal}>{t("Close")}</Button>
+                <Button onClick={closeResultModal}>{t("Confirm")}</Button>
               </>
             ) : null}
           </Modal.Footer>
@@ -293,4 +279,4 @@ const UpgradeMaster: React.FC = () => {
   );
 };
 
-export default UpgradeMaster;
+export default ListUser;

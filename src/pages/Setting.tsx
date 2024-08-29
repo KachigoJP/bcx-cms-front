@@ -15,20 +15,14 @@ import {
   Spinner,
   Modal,
 } from "react-bootstrap";
-import { FieldError, useApi } from "../../helpers/api";
-import { API } from "../../helpers/constants";
-import { getAdminSettingSchema } from "../../helpers/schemas";
-import ResponseModal from "../../components/Modals/ResponseModal";
+import { FieldError, useApi } from "../helpers/api";
+import { API } from "../helpers/constants";
+import { getAdminSettingSchema } from "../helpers/schemas";
+import ResponseModal from "../components/Modals/ResponseModal";
 
 const Setting = () => {
   const { t } = useTranslation();
   const [showResultModal, setShowResultModal] = React.useState(false);
-
-  const { state, sendRequest } = useApi(API.ADMIN_CONFIG);
-
-  const { state: stateConfig, sendRequest: sendRequestConfig } = useApi(
-    API.ADMIN_CONFIG
-  );
 
   const validationSchema = getAdminSettingSchema(t);
   const {
@@ -41,42 +35,13 @@ const Setting = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  React.useEffect(() => {
-    sendRequest({
-      method: "GET",
-    });
-  }, []);
+  React.useEffect(() => {}, []);
 
-  React.useEffect(() => {
-    const response = state.data;
-    if (response && response.status === 200) {
-      const threshold = response.data.data.threshold;
-      setValue("usd", threshold.usd);
-      setValue("eur", threshold.eur);
-      setValue("jpy", threshold.jpy);
-      setValue("mxn", threshold.mxn);
-      setValue("usdt", threshold.usdt);
-      setValue("bnb", threshold.bnb);
-    }
-  }, [state]);
-
-  React.useEffect(() => {
-    const response = stateConfig.data;
-    if (response && response.status === 200) {
-      setShowResultModal(true);
-    }
-  }, [stateConfig, setValue]);
-
-  const onSubmit = (config: any) => {
-    sendRequestConfig({
-      method: "PATCH",
-      data: config,
-    });
-  };
+  const onSubmit = (config: any) => {};
 
   return (
     <div className="main-content h-100">
-      {state.isError && state.errors ? (
+      {/* {state.isError && state.errors ? (
         <Alert variant="danger">
           {state.errors.map((field: FieldError, key: number) => {
             return (
@@ -93,7 +58,7 @@ const Setting = () => {
             );
           })}
         </Alert>
-      ) : null}
+      ) : null} */}
 
       <Card style={{ minHeight: "100%" }}>
         <Card.Body>
@@ -113,7 +78,7 @@ const Setting = () => {
                   {errors.affiliatePercentage?.message}
                 </Form.Text>
               </Col>
-            </Row> */}
+            </Row>
             <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
                 {t("USD")}
@@ -203,9 +168,9 @@ const Setting = () => {
                   {errors.bnb?.message}
                 </Form.Text>
               </Col>
-            </Row>
+            </Row> */}
 
-            {state.isLoading || stateConfig.isLoading ? (
+            {/* {state.isLoading || stateConfig.isLoading ? (
               <Button variant="primary" className="me-3 px-5" disabled>
                 <Spinner
                   as="span"
@@ -220,7 +185,7 @@ const Setting = () => {
               <Button variant="primary" type="submit" className="me-3 px-5">
                 {t("Confirm")}
               </Button>
-            )}
+            )} */}
           </Form>
 
           <Modal

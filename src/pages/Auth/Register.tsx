@@ -15,14 +15,11 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { MdOutlineCheckCircle } from "react-icons/md";
-import EmailStep from "../../components/Forms/RegisterEmailStep";
-import InfoStep from "../../components/Forms/RegisterInfoStep";
-import AgreeStep from "../../components/Forms/RegisterAgreeStep ";
 
 // Apps Imports
 import { useApi, FieldError } from "../../helpers/api";
 import { RegisterReducer } from "../../helpers/reducers";
-import { RegisterState } from "../../helpers/types";
+import { RegisterState } from "../../helpers/interfaces/types";
 import {
   ROUTES,
   API,
@@ -104,29 +101,6 @@ const Register: React.FC = () => {
                 </Alert>
               ) : null}
               <Card.Title>{t("Register")}</Card.Title>
-              {step === "" ? (
-                <EmailStep
-                  state={state}
-                  onSubmit={onSubmit(REGISTER_ACTION_TYPES.CHECK_EMAIL_FINISH)}
-                />
-              ) : null}
-              {step === REGISTER_ACTION_TYPES.CHECK_EMAIL_FINISH ? (
-                <InfoStep
-                  state={state}
-                  backPrevStep={goStep("")}
-                  onSubmit={onSubmit(REGISTER_ACTION_TYPES.INPUT_INFO_FINISH)}
-                />
-              ) : null}
-              {step === REGISTER_ACTION_TYPES.INPUT_INFO_FINISH ||
-              step === REGISTER_ACTION_TYPES.AGREE_FINISH ? (
-                <AgreeStep
-                  backPrevStep={goStep(
-                    REGISTER_ACTION_TYPES.CHECK_EMAIL_FINISH
-                  )}
-                  state={state}
-                  onSubmit={onSubmit(REGISTER_ACTION_TYPES.AGREE_FINISH)}
-                />
-              ) : null}
               <Row>
                 <Col className="text-end register-link">
                   <Link to={ROUTES.LOGIN} className="text-end">

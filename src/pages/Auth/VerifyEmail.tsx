@@ -54,9 +54,7 @@ const ResetPassword: React.FC = () => {
                 </Alert>
               ) : (
                 <>
-                  <Card.Title>
-                    {t("Thank you for using Rays-Wallet")}
-                  </Card.Title>
+                  <Card.Title>{t("Thank you for joing with us")}</Card.Title>
                   <Card.Text>
                     <p>{t("Your Account has been opened successfully")}</p>
                     <p className="text-start">

@@ -8,11 +8,11 @@ import moment from "moment";
 import { Form, Button, Row, Col, Card } from "react-bootstrap";
 
 // Apps Imports
-import { AuthContext } from "../contexts/auth";
-import { getCountryName } from "../helpers/functions";
-import { ROUTES, GENDER_OPTIONS, ROLE } from "../helpers/constants";
-import { OptionItem } from "../helpers/types";
-import Languages from "../assets/json/languages.json";
+import { AuthContext } from "../../contexts/auth";
+import { getCountryName } from "../../helpers/functions";
+import { ROUTES, GENDER_OPTIONS, ROLE } from "../../helpers/constants";
+import { OptionItem } from "../../helpers/interfaces/types";
+import Languages from "../../assets/json/languages.json";
 
 const Profile: React.FC = () => {
   // Hooks
@@ -26,28 +26,6 @@ const Profile: React.FC = () => {
 
   return (
     <div className="main-content">
-      {/* Breadcrumb */}
-      <nav className="page-breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <Link to={ROUTES.HOME}>{t("Home")}</Link>
-          </li>
-          <li className="breadcrumb-item active" aria-current="page">
-            {t("Profile Detail")}
-          </li>
-        </ol>
-        <Card>
-          <Card.Body>
-            <ul>
-              <li>
-                <span>{t("Profile")}</span>
-              </li>
-              <li></li>
-            </ul>
-          </Card.Body>
-        </Card>
-      </nav>
-
       {/* Body */}
       <Card>
         <Card.Body>
@@ -59,17 +37,6 @@ const Profile: React.FC = () => {
               </Form.Label>
               <Col sm={6} className="d-flex flex-column justify-content-center">
                 {user?.email}
-              </Col>
-              <Col sm={3}>
-                <Link to={ROUTES.EMAIL_CHANGE}>
-                  <Button
-                    variant="outline-primary"
-                    type="button"
-                    className="px-3"
-                  >
-                    {t("Change Email")}
-                  </Button>
-                </Link>
               </Col>
             </Row>
             <Row className="mb-3">
@@ -89,55 +56,6 @@ const Profile: React.FC = () => {
                     {t("Change Password")}
                   </Button>
                 </Link>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Account Number")}
-              </Form.Label>
-              <Col sm={6} className="d-flex flex-column justify-content-center">
-                {user?.accountNumber}
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Account Level")}
-              </Form.Label>
-              <Col sm={6} className="d-flex flex-column justify-content-center">
-                {user?.accountLevel ? t(user?.accountLevel) : null}
-              </Col>
-            </Row>
-            {user?.role === ROLE.NORMAL ? (
-              <Row className="mb-3">
-                <Form.Label className="col-md-3 col-form-label">
-                  {t("Invitation Code")}
-                </Form.Label>
-                <Col
-                  sm={6}
-                  className="d-flex flex-column justify-content-center"
-                >
-                  {user?.refererCode ? (
-                    user?.refererCode
-                  ) : (
-                    <Link to={ROUTES.REFERRER_CHANGE}>
-                      <Button
-                        variant="outline-primary"
-                        type="button"
-                        className="px-3"
-                      >
-                        {t("Register")}
-                      </Button>
-                    </Link>
-                  )}
-                </Col>
-              </Row>
-            ) : null}
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Applicant Type")}
-              </Form.Label>
-              <Col sm={6} className="d-flex flex-column justify-content-center">
-                {user?.applicantType ? t(user?.applicantType) : null}
               </Col>
             </Row>
             <Row className="mb-3">
