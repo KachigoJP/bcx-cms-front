@@ -72,7 +72,7 @@ export const API = {
 
   PROFILE: `${API_URL}/profile`,
   USER_GET_INFORMATION: `${API_URL}/user/get-information`,
-  UPDATE_INFORMATION: `${API_URL}/user/update-information`,
+  PROFILE_UPDATE: `${API_URL}/profile`,
   CHANGE_PASS: `${API_URL}/user/change-password`,
   CHANGE_EMAIL: `${API_URL}/user/request-change-email`,
   CHANGE_INVITATION_CODE: `${API_URL}/user/change-invitation`,

@@ -18,33 +18,42 @@ import {
 
 export const getProfileFormSchema = (t: TFunction) => {
   return Yup.object().shape({
+    firstName: getErrorText(t, "firstName", {
+      notRequired: true,
+    }),
+    lastName: getErrorText(t, "lastName", {
+      notRequired: true,
+    }),
+    dateOfBirth: getErrorText(
+      t,
+      "dateOfBirth",
+      {
+        notRequired: true,
+      },
+      "date"
+    ),
     gender: getErrorText(t, "gender", {
-      required: true,
+      notRequired: true,
+    }),
+    country: getErrorText(t, "country", {
+      notRequired: true,
     }),
     postcode: getErrorText(t, "postcode", {
-      required: true,
+      notRequired: true,
       max: FIELD_LIMIT.MAX_PHONE_NUMBER,
     }),
     region: getErrorText(t, "region", {
-      required: true,
+      notRequired: true,
     }),
     city: getErrorText(t, "city", {
-      required: true,
-      max: FIELD_LIMIT.MAX_ADDRESS_CHARACTER,
-    }),
-    district: getErrorText(t, "district", {
       notRequired: true,
       max: FIELD_LIMIT.MAX_ADDRESS_CHARACTER,
     }),
-    street: getErrorText(t, "street", {
-      required: true,
-      max: FIELD_LIMIT.MAX_ADDRESS_CHARACTER,
-    }),
-    apartment: getErrorText(t, "apartment", {
+    address: getErrorText(t, "address", {
       notRequired: true,
       max: FIELD_LIMIT.MAX_ADDRESS_CHARACTER,
     }),
-    streetNo: getErrorText(t, "streetNo", {
+    building: getErrorText(t, "building", {
       notRequired: true,
       max: FIELD_LIMIT.MAX_ADDRESS_CHARACTER,
     }),
@@ -52,7 +61,7 @@ export const getProfileFormSchema = (t: TFunction) => {
       required: true,
     }),
     phoneNumber: getErrorText(t, "phoneNumber", {
-      required: true,
+      notRequired: true,
       max: FIELD_LIMIT.MAX_PHONE_NUMBER,
     }),
     language: Yup.string().nullable(),

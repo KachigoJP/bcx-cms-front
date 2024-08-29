@@ -101,7 +101,7 @@ const CreateUser: React.FC = () => {
   };
 
   const onBirthdateChange = (value: Date) => {
-    setValue("dateOfBirth", value.toDateString());
+    // setValue("dateOfBirth", value.toDateString());
   };
 
   return (
@@ -157,36 +157,6 @@ const CreateUser: React.FC = () => {
                 />
                 <Form.Text className="text-danger">
                   {errors.password?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Account Level")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select defaultValue="" {...register("accountLevel")}>
-                  <option value="">{t("Please select")}</option>
-                  <option value="Fast">{t("Fast")}</option>
-                  <option value="Premier">{t("Premier")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.accountLevel?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Applicant Type")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select defaultValue="" {...register("applicantType")}>
-                  <option value="">{t("Please select")}</option>
-                  <option value="Individual">{t("Individual")}</option>
-                  <option value="Corporate">{t("Corporate")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.applicantType?.message}
                 </Form.Text>
               </Col>
             </Row>
@@ -294,45 +264,12 @@ const CreateUser: React.FC = () => {
             </Row>
             <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
-                {t("District/Suburb")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control type="text" {...register("district")} />
-                <Form.Text className="text-danger">
-                  {errors.district?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
                 {t("Street")}
               </Form.Label>
               <Col sm={6}>
                 <Form.Control type="text" {...register("address")} />
                 <Form.Text className="text-danger">
                   {errors.address?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Street No.")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control type="text" {...register("streetNo")} />
-                <Form.Text className="text-danger">
-                  {errors.streetNo?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Apartment No.")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control type="text" {...register("apartment")} />
-                <Form.Text className="text-danger">
-                  {errors.apartment?.message}
                 </Form.Text>
               </Col>
             </Row>
@@ -382,21 +319,6 @@ const CreateUser: React.FC = () => {
                     </Form.Text>
                   </Col>
                 </Row>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Language")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select {...register("language")}>
-                  <option value="">{t("Please select")}</option>
-                  <option value="en">{t("English")}</option>
-                  <option value="jp">{t("Japanese")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.language?.message}
-                </Form.Text>
               </Col>
             </Row>
             <Row className="mb-3">

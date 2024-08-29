@@ -73,8 +73,6 @@ const UpdateUser: React.FC = () => {
       const user = response.data.data;
       reset({
         email: user.email,
-        accountLevel: user.accountLevel,
-        applicantType: user.applicantType,
         firstName: user.firstName,
         lastName: user.lastName,
         dateOfBirth: user.dateOfBirth,
@@ -82,19 +80,6 @@ const UpdateUser: React.FC = () => {
         phoneNumber: user.phoneNumber,
         postcode: user.postcode,
         country: user.country,
-        region: user.region,
-        city: user.city,
-        district: user.district,
-        address: user.address,
-        streetNo: user.streetNo,
-        apartment: user.apartment,
-        phoneCode: user.phoneCode,
-        language: user.language,
-        is2FAEnabled: user.is2FAEnabled,
-        isVerified: user.isVerified,
-        isKyc: user.isKyc,
-        // role: user.role,
-        isInformationUpdated: user.isInformationUpdated,
       });
     }
   }, [stateUser]);
@@ -131,7 +116,7 @@ const UpdateUser: React.FC = () => {
   };
 
   const onBirthdateChange = (value: Date) => {
-    setValue("dateOfBirth", value.toDateString());
+    // setValue("dateOfBirth", value.toDateString());
   };
   const user = stateUser?.data?.data?.data || {};
   return (
@@ -195,42 +180,6 @@ const UpdateUser: React.FC = () => {
                 <Form.Control type="password" {...register("password")} />
                 <Form.Text className="text-danger">
                   {errors.password?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Account Level")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select
-                  defaultValue={user?.accountLevel}
-                  {...register("accountLevel")}
-                >
-                  <option value="">{t("Please select")}</option>
-                  <option value="Fast">{t("Fast")}</option>
-                  <option value="Premier">{t("Premier")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.accountLevel?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Applicant Type")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select
-                  defaultValue={user?.applicantType}
-                  {...register("applicantType")}
-                >
-                  <option value="">{t("Please select")}</option>
-                  <option value="Individual">{t("Individual")}</option>
-                  <option value="Corporate">{t("Corporate")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.applicantType?.message}
                 </Form.Text>
               </Col>
             </Row>
@@ -367,21 +316,6 @@ const UpdateUser: React.FC = () => {
             </Row>
             <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
-                {t("District/Suburb")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.district}
-                  {...register("district")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.district?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
                 {t("Street")}
               </Form.Label>
               <Col sm={6}>
@@ -392,36 +326,6 @@ const UpdateUser: React.FC = () => {
                 />
                 <Form.Text className="text-danger">
                   {errors.address?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Street No.")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.streetNo}
-                  {...register("streetNo")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.streetNo?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Apartment No.")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.apartment}
-                  {...register("apartment")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.apartment?.message}
                 </Form.Text>
               </Col>
             </Row>
@@ -476,24 +380,6 @@ const UpdateUser: React.FC = () => {
                     </Form.Text>
                   </Col>
                 </Row>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Language")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select
-                  defaultValue={user?.language}
-                  {...register("language")}
-                >
-                  <option value="">{t("Please select")}</option>
-                  <option value="en">{t("English")}</option>
-                  <option value="jp">{t("Japanese")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.language?.message}
-                </Form.Text>
               </Col>
             </Row>
             <Row className="mb-3">

@@ -18,6 +18,7 @@ import {
 } from "react-bootstrap";
 import OtpModal from "../../components/Modals/OtpModal";
 import ResponseModal from "../../components/Modals/ResponseModal";
+import BirthdatePicker from "../../components/Components/BirthdatePicker";
 
 // Apps Imports
 import { AuthContext } from "../../contexts/auth";
@@ -42,6 +43,7 @@ const Profile: React.FC = () => {
 
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -49,7 +51,7 @@ const Profile: React.FC = () => {
   });
 
   // APIs
-  const { state, sendRequest, reset } = useApi(API.UPDATE_INFORMATION);
+  const { state, sendRequest, reset } = useApi(API.PROFILE_UPDATE);
 
   // Effects
   React.useEffect(() => {
@@ -62,26 +64,28 @@ const Profile: React.FC = () => {
   }, [state]);
 
   // Methods
-  const onSubmitOtp = (otpData: IOtpForm) => {
-    setShowOtpModal(false);
-    if (submitData) processExecute(submitData, otpData.otpToken);
-  };
-  const onOtpChange = () => {
-    reset();
-  };
+  // const onSubmitOtp = (otpData: IOtpForm) => {
+  //   setShowOtpModal(false);
+  //   if (submitData) processExecute(submitData, otpData.otpToken);
+  // };
+
+  // const onOtpChange = () => {
+  //   reset();
+  // };
+
   const onSubmit: SubmitHandler<IProfileForm> = (data: IProfileForm) => {
     if (!user?.is2FAEnabled) {
       processExecute(data);
     } else {
-      setSubmitData(data);
-      setShowOtpModal(true);
+      // setSubmitData(data);
+      // setShowOtpModal(true);
     }
   };
 
-  const processExecute = (sendData: IOtpForm, otp?: number) => {
-    if (otp && sendData) {
-      sendData.otpToken = otp;
-    }
+  const processExecute = (sendData: IProfileForm, otp?: number) => {
+    // if (otp && sendData) {
+    //   sendData.otpToken = otp;
+    // }
     sendRequest({
       method: "patch",
       data: sendData,
@@ -98,6 +102,10 @@ const Profile: React.FC = () => {
 
   const closeOtpModal = () => {
     setShowOtpModal(false);
+  };
+
+  const onBirthdateChange = (value: Date) => {
+    setValue("dateOfBirth", value);
   };
 
   return (
@@ -129,8 +137,55 @@ const Profile: React.FC = () => {
           <Form className="col-xl-8" onSubmit={handleSubmit(onSubmit)}>
             <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
-                {t("Sex")}
+                {t("First Name")}
+              </Form.Label>
+              <Col sm={6}>
+                <Form.Control
+                  type="text"
+                  defaultValue={user?.firstName}
+                  {...register("firstName")}
+                />
+                <Form.Text className="text-danger">
+                  {errors.firstName?.message}
+                </Form.Text>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Form.Label className="col-md-3 col-form-label">
+                {t("Last Name")}
+              </Form.Label>
+              <Col sm={6}>
+                <Form.Control
+                  type="text"
+                  defaultValue={user?.lastName}
+                  {...register("lastName")}
+                />
+                <Form.Text className="text-danger">
+                  {errors.lastName?.message}
+                </Form.Text>
+              </Col>
+            </Row>
+            <Row>
+              <Form.Label className="col-md-3 col-form-label">
+                {t("Date of Birth")}
                 <span className="text-danger">*</span>
+              </Form.Label>
+              <Col sm={8}>
+                <BirthdatePicker
+                  defaultValue={(user?.dateOfBirth
+                    ? new Date(user.dateOfBirth)
+                    : new Date(1970, 1, 1)
+                  ).toISOString()}
+                  onChange={onBirthdateChange}
+                />
+                <Form.Text className="text-danger">
+                  {errors.dateOfBirth?.message}
+                </Form.Text>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Form.Label className="col-md-3 col-form-label">
+                {t("Gender")}
               </Form.Label>
               <Col sm={6}>
                 <Form.Select
@@ -146,10 +201,9 @@ const Profile: React.FC = () => {
                 </Form.Text>
               </Col>
             </Row>
-            {/* <Row className="mb-3">
+            <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
                 {t("Country")}
-                <span className="text-danger">*</span>
               </Form.Label>
               <Col sm={6}>
                 <Form.Select
@@ -165,104 +219,10 @@ const Profile: React.FC = () => {
                   })}
                 </Form.Select>
               </Col>
-            </Row> */}
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Region/State/Province")}
-                <span className="text-danger">*</span>
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.region}
-                  {...register("region")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.region?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("City")}
-                <span className="text-danger">*</span>
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.city}
-                  {...register("city")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.city?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("District/Suburb")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.district}
-                  {...register("district")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.district?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Street")}
-                <span className="text-danger">*</span>
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.street}
-                  {...register("street")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.street?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Street No.")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.streetNo}
-                  {...register("streetNo")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.streetNo?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Apartment No.")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.apartment}
-                  {...register("apartment")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.apartment?.message}
-                </Form.Text>
-              </Col>
             </Row>
             <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
                 {t("Post Code")}
-                <span className="text-danger">*</span>
               </Form.Label>
               <Col sm={6}>
                 <Form.Control
@@ -278,8 +238,67 @@ const Profile: React.FC = () => {
             </Row>
             <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
+                {t("Region")}
+              </Form.Label>
+              <Col sm={6}>
+                <Form.Control
+                  type="text"
+                  defaultValue={user?.region}
+                  {...register("region")}
+                />
+                <Form.Text className="text-danger">
+                  {errors.region?.message}
+                </Form.Text>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Form.Label className="col-md-3 col-form-label">
+                {t("City")}
+              </Form.Label>
+              <Col sm={6}>
+                <Form.Control
+                  type="text"
+                  defaultValue={user?.city}
+                  {...register("city")}
+                />
+                <Form.Text className="text-danger">
+                  {errors.city?.message}
+                </Form.Text>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Form.Label className="col-md-3 col-form-label">
+                {t("Address")}
+              </Form.Label>
+              <Col sm={6}>
+                <Form.Control
+                  type="text"
+                  defaultValue={user?.address}
+                  {...register("address")}
+                />
+                <Form.Text className="text-danger">
+                  {errors.address?.message}
+                </Form.Text>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Form.Label className="col-md-3 col-form-label">
+                {t("Building")}
+              </Form.Label>
+              <Col sm={6}>
+                <Form.Control
+                  type="text"
+                  defaultValue={user?.building}
+                  {...register("building")}
+                />
+                <Form.Text className="text-danger">
+                  {errors.building?.message}
+                </Form.Text>
+              </Col>
+            </Row>
+            <Row className="mb-3">
+              <Form.Label className="col-md-3 col-form-label">
                 {t("Phone Number")}
-                <span className="text-danger">*</span>
               </Form.Label>
               <Col sm={6}>
                 <Row>
@@ -289,6 +308,7 @@ const Profile: React.FC = () => {
                       {...register("phoneCode")}
                     >
                       {PhoneCodes.map((item: any) => {
+                        console.log("Loading");
                         return (
                           <option key={item.code} value={item.dial_code}>
                             {`(+${item.dial_code}) ${item.name}`}
@@ -312,20 +332,6 @@ const Profile: React.FC = () => {
                     </Form.Text>
                   </Col>
                 </Row>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Language")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select
-                  defaultValue={user?.language}
-                  {...register("language")}
-                >
-                  <option value="en">{t("English")}</option>
-                  <option value="jp">{t("Japanese")}</option>
-                </Form.Select>
               </Col>
             </Row>
 
@@ -357,9 +363,9 @@ const Profile: React.FC = () => {
           </Form>
 
           {/* OTP Token Modal */}
-          <Modal show={showOtpModal} onHide={closeOtpModal}>
+          {/* <Modal show={showOtpModal} onHide={closeOtpModal}>
             <OtpModal onSubmit={onSubmitOtp} onOtpChange={onOtpChange} />
-          </Modal>
+          </Modal> */}
 
           {/* Result Modal */}
           <Modal show={showResultModal} onHide={closeResultModal} centered>

@@ -43,6 +43,7 @@ export function useApi<T>(initialUrl: string): any {
       const result: AxiosResponse = await axios({
         url,
         ...request,
+        withCredentials: true,
       });
 
       dispatch({ type: API_ACTION_TYPES.FETCH_SUCCESS, payload: result });

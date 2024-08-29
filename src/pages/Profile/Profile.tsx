@@ -33,7 +33,7 @@ const Profile: React.FC = () => {
           <Form className="col-xl-8">
             <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
-                {t("Email Address")}
+                {t("Email")}
               </Form.Label>
               <Col sm={6} className="d-flex flex-column justify-content-center">
                 {user?.email}
@@ -86,7 +86,7 @@ const Profile: React.FC = () => {
             </Row>
             <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
-                {t("Sex")}
+                {t("Gender")}
               </Form.Label>
               <Col sm={6} className="d-flex flex-column justify-content-center">
                 {user?.gender
@@ -120,7 +120,7 @@ const Profile: React.FC = () => {
             </Row>
             <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
-                {t("Region/State/Province")}
+                {t("Region")}
               </Form.Label>
               <Col sm={6} className="d-flex flex-column justify-content-center">
                 {user?.region}
@@ -136,34 +136,18 @@ const Profile: React.FC = () => {
             </Row>
             <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
-                {t("District/Suburb")}
+                {t("Address")}
               </Form.Label>
               <Col md={6} className="d-flex flex-column justify-content-center">
-                {user?.district}
+                {user?.address}
               </Col>
             </Row>
             <Row className="mb-3">
               <Form.Label className="col-md-3 col-form-label">
-                {t("Street")}
-              </Form.Label>
-              <Col md={6} className="d-flex flex-column justify-content-center">
-                {user?.street}
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Street No.")}
-              </Form.Label>
-              <Col md={6} className="d-flex flex-column justify-content-center">
-                {user?.streetNo}
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Apartment No.")}
+                {t("Building")}
               </Form.Label>
               <Col sm={6} className="d-flex flex-column justify-content-center">
-                {user?.apartment}
+                {user?.building}
               </Col>
             </Row>
             <Row className="mb-3">
@@ -172,14 +156,6 @@ const Profile: React.FC = () => {
               </Form.Label>
               <Col sm={6} className="d-flex flex-column justify-content-center">
                 {`(+${user?.phoneCode}) ${user?.phoneNumber}`}
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Language")}
-              </Form.Label>
-              <Col sm={6} className="d-flex flex-column justify-content-center">
-                {user?.language == "en" ? t("English") : t("Japanese")}
               </Col>
             </Row>
             <Link
