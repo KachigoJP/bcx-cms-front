@@ -25,7 +25,9 @@ const ListUser: React.FC = () => {
   // Hooks
   const { t } = useTranslation();
   let [searchParams, setSearchParams] = useSearchParams();
-  const [page, setPage] = React.useState(searchParams.get("page") || 1);
+  const [currPage, setCurrPage] = React.useState(
+    parseInt(searchParams.get("page") || "1")
+  );
   const [search, setSearch] = React.useState<string | null>(
     searchParams.get("search")
   );
@@ -35,24 +37,17 @@ const ListUser: React.FC = () => {
   const [deleteId, setDeleteId] = React.useState("");
 
   // APIs
-  const { state, sendRequest } = useApi(API.ADMIN_LIST_USER);
-  const { state: stateDelete, sendRequest: sendDeleteRequest } = useApi(
-    API.ADMIN_DELETE_USER
-  );
+  const { state: stateListUser, sendRequest: sendListUser } = useApi();
+  const { state: stateDelete, sendRequest: sendDeleteRequest } = useApi();
 
   // Effects
   React.useEffect(() => {
-    if (!state.data) {
-      sendRequest({
-        method: "get",
-        params: {
-          page,
-          search,
-        },
-      });
+    if (!stateListUser.data) {
+      doSearch();
     }
     return () => {};
   }, []);
+
   React.useEffect(() => {
     if (stateDelete.errors) {
       setShowResultModal(false);
@@ -65,31 +60,28 @@ const ListUser: React.FC = () => {
     setSearch(event.target.value || null);
   };
   const onBlurSearch = (event: any) => {
-    setPage(1);
-    const params: any = {
-      page: 1,
-      search,
-    };
-
-    sendRequest({
-      method: "get",
-      params,
-    });
-    setSearchParams(params);
+    doSearch(1);
   };
 
   const onChangePage = (page: number) => () => {
+    doSearch(page);
+  };
+
+  const doSearch = (page?: number) => {
     const params: any = {
-      page,
+      page: page || currPage,
       search,
     };
 
-    sendRequest({
+    sendListUser({
       method: "get",
+      url: API.USERS,
       params,
     });
+
     setSearchParams(params);
   };
+
   const onClickDelete = (id: string) => () => {
     setDeleteId(id);
     setShowDeleteModal(true);
@@ -110,19 +102,13 @@ const ListUser: React.FC = () => {
 
   const closeResultModal = () => {
     setShowResultModal(false);
+
     if (stateDelete.data) {
-      const params: any = {
-        page,
-        search,
-      };
-      sendRequest({
-        method: "get",
-        params,
-      });
+      doSearch();
     }
   };
 
-  const tableData = state?.data?.data?.data;
+  const tableData = stateListUser?.data?.data;
   const currentPage = tableData?.page || 1;
   const startIdx = tableData?.pageSize * (currentPage - 1);
   const totalPage = tableData?.totalPage | 1;
@@ -159,9 +145,6 @@ const ListUser: React.FC = () => {
                   <th>{t("Email")}</th>
                   <th>{t("First Name")}</th>
                   <th>{t("Last Name")}</th>
-                  <th>{t("Account Number")}</th>
-                  <th>{t("Account Level")}</th>
-                  <th>{t("Applicant Type")}</th>
                   <th>{t("Action")}</th>
                 </tr>
               </thead>
@@ -174,9 +157,6 @@ const ListUser: React.FC = () => {
                         <td>{item.email}</td>
                         <td>{item.firstName}</td>
                         <td>{item.lastName}</td>
-                        <td>{item.accountNumber}</td>
-                        <td>{t(item.accountLevel)}</td>
-                        <td>{t(item.applicantType)}</td>
                         <td>
                           <Link
                             to={generatePath(ROUTES.USER_UPDATE, {

@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
+import { Modal } from "react-bootstrap";
 
 // UI Imports
 import { Row, Button } from "react-bootstrap";
-import { MdDashboard } from "react-icons/md";
+import { MdDashboard, MdPerson } from "react-icons/md";
 import "../../scss/common/components/_dashboard.scss";
 
 // App imports
@@ -12,7 +13,6 @@ import { AuthContext } from "../../contexts/auth";
 import { PrefContext } from "../../contexts/preferrence";
 import { ROLE, ROUTES } from "../../helpers/constants";
 import LOGO from "../../assets/img/logo.svg";
-import { Modal } from "react-bootstrap";
 
 const Sidebar: React.FC = () => {
   const { t } = useTranslation();
@@ -92,7 +92,7 @@ const Sidebar: React.FC = () => {
               }`}
             >
               <Link to={ROUTES.USER_LIST} className="nav-link">
-                <MdDashboard className="link-icon" />
+                <MdPerson className="link-icon" />
                 <span className="link-title">{t("Users")}</span>
               </Link>
             </li>

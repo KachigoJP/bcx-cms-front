@@ -82,7 +82,7 @@ export const API = {
 
   BALANCE: `${API_URL}/user/wallet-balance`,
 
-  ADMIN_LIST_USER: `${API_URL}/admin/users`,
+  USERS: `${API_URL}/users`,
   ADMIN_DELETE_USER: `${API_URL}/admin/users`,
   ADMIN_GET_USER: `${API_URL}/admin/users`,
   ADMIN_UPDATE_USER: `${API_URL}/admin/users`,

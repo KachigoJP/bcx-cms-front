@@ -25,7 +25,7 @@ export function isInitState<T>(state: AuthState<T>) {
   );
 }
 
-export function useApi<T>(initialUrl: string): any {
+export function useApi<T>(initialUrl: string = ""): any {
   const [url] = React.useState<string>(initialUrl);
   const { logout } = React.useContext(AuthContext);
 

@@ -23,10 +23,6 @@ const authRoutes = [
     component: React.lazy(() => import("../pages/Profile/PasswordChange")),
   },
   {
-    path: ROUTES.EMAIL_CHANGE,
-    component: React.lazy(() => import("../pages/Profile/EmailChange")),
-  },
-  {
     path: ROUTES.VERIFICATION_2FA,
     component: React.lazy(() => import("../pages/Profile/2FA")),
   },
