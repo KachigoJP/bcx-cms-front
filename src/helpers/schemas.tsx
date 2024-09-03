@@ -68,23 +68,6 @@ export const getProfileFormSchema = (t: TFunction) => {
   }) as Yup.ObjectSchema<IProfileForm>;
 };
 
-export const getChangeEmailSchema = (t: TFunction) => {
-  return Yup.object().shape({
-    email: getErrorText(t, "email", {
-      required: true,
-      maxLength: FIELD_LIMIT.MAX_CHARACTER,
-      regex: REGEX.EMAIL,
-    }),
-    confirmEmail: Yup.string().oneOf(
-      [Yup.ref("email"), undefined],
-      t("{{ field1 }} and {{ field2 }} do not match. Please try again.", {
-        field1: t("email"),
-        field2: t("confirmEmail"),
-      })
-    ),
-  }) as Yup.ObjectSchema<IChangeMailForm>;
-};
-
 const getFileValidation = (field: string, t: TFunction) => {
   return Yup.mixed<FileList>()
     .test(
@@ -245,78 +228,36 @@ export const getForgotPassSchema = (t: TFunction) => {
   }) as Yup.ObjectSchema<IForgotForm>;
 };
 
-export const getAdminSettingSchema = (t: TFunction) => {
+export const getSettingSchema = (t: TFunction) => {
   return Yup.object().shape({
-    usd: getErrorText(
-      t,
-      "USD",
-      {
-        required: true,
-        minAmount: 0,
-      },
-      "number"
-    ),
-    eur: getErrorText(
-      t,
-      "EUR",
-      {
-        required: true,
-        minAmount: 0,
-      },
-      "number"
-    ),
-    jpy: getErrorText(
-      t,
-      "JPY",
-      {
-        required: true,
-        minAmount: 0,
-      },
-      "number"
-    ),
-    mxn: getErrorText(
-      t,
-      "MXN",
-      {
-        required: true,
-        minAmount: 0,
-      },
-      "number"
-    ),
-    usdt: getErrorText(
-      t,
-      "USDT",
-      {
-        required: true,
-        minAmount: 0,
-      },
-      "number"
-    ),
-    bnb: getErrorText(
-      t,
-      "USDT",
-      {
-        required: true,
-        minAmount: 0,
-      },
-      "number"
-    ),
+    key: getErrorText(t, "key", {
+      required: true,
+      minLength: 1,
+      maxLength: FIELD_LIMIT.MAX_CHARACTER,
+    }),
+    type: getErrorText(t, "type", {
+      required: true,
+      maxLength: FIELD_LIMIT.MAX_CHARACTER,
+    }),
+    label: getErrorText(t, "label", {
+      notRequired: true,
+      maxLength: FIELD_LIMIT.MAX_CHARACTER,
+    }),
+    value: getErrorText(t, "value", {
+      required: true,
+      minLength: 1,
+    }),
+    description: getErrorText(t, "value", {
+      notRequired: true,
+    }),
   });
 };
 
-export const getAdminUserSchema = (t: TFunction) => {
+export const getUserSchema = (t: TFunction) => {
   return Yup.object().shape({
-    email: getErrorText(t, "email", {
-      required: true,
-      maxLength: FIELD_LIMIT.MAX_CHARACTER,
-      regex: REGEX.EMAIL,
-    }),
     password: (
       getErrorText(t, "password", {
         notRequired: true,
-        maxLength: FIELD_LIMIT.MAX_PASSWORD,
-        // minLength: FIELD_LIMIT.MIN_PASSWORD,
-        // regexPassword: REGEX.PASSWORD,
       }) as Yup.StringSchema
     )
       .matches(REGEX.PASSWORD, {
@@ -326,12 +267,6 @@ export const getAdminUserSchema = (t: TFunction) => {
         excludeEmptyString: true,
       })
       .default(null),
-    accountLevel: getErrorText(t, "accountLevel", {
-      required: true,
-    }),
-    applicantType: getErrorText(t, "applicantType", {
-      required: true,
-    }),
     firstName: getErrorText(t, "firstName", {
       required: true,
       minLength: 1,
@@ -342,16 +277,53 @@ export const getAdminUserSchema = (t: TFunction) => {
       minLength: 1,
       maxLength: FIELD_LIMIT.MAX_CHARACTER,
     }),
+    dateOfBirth: getErrorText(
+      t,
+      "dateOfBirth",
+      {
+        notRequired: true,
+      },
+      "date"
+    ),
+    gender: getErrorText(t, "gender", {
+      required: true,
+    }),
+    country: getErrorText(t, "country", {
+      notRequired: true,
+    }),
+    postcode: getErrorText(t, "postcode", {
+      notRequired: true,
+      max: FIELD_LIMIT.MAX_PHONE_NUMBER,
+    }),
+    region: getErrorText(t, "region", {
+      notRequired: true,
+    }),
+    city: getErrorText(t, "city", {
+      notRequired: true,
+      max: FIELD_LIMIT.MAX_ADDRESS_CHARACTER,
+    }),
+    address: getErrorText(t, "address", {
+      notRequired: true,
+      max: FIELD_LIMIT.MAX_ADDRESS_CHARACTER,
+    }),
+    building: getErrorText(t, "building", {
+      notRequired: true,
+      max: FIELD_LIMIT.MAX_ADDRESS_CHARACTER,
+    }),
+    phoneCode: getErrorText(t, "phoneCode", {
+      required: true,
+    }),
+    phoneNumber: getErrorText(t, "phoneNumber", {
+      notRequired: true,
+      max: FIELD_LIMIT.MAX_PHONE_NUMBER,
+    }),
     isVerified: getErrorText(t, "isVerified", {
       required: true,
     }),
     is2FAEnabled: getErrorText(t, "is2FAEnabled", {
       required: true,
     }),
-    isInformationUpdated: getErrorText(t, "isInformationUpdated", {
-      required: true,
-    }),
-    isKyc: getErrorText(t, "isKyc", {
+    isAccountInit: getErrorText(t, "isAccountInit", {
       required: true,
     }),
   });

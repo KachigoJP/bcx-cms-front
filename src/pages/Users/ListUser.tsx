@@ -18,16 +18,15 @@ import {
 import { MdDelete, MdEdit, MdOutlineCheckCircle } from "react-icons/md";
 
 // Apps Imports
-import { useApi } from "../../helpers/api";
-import { ROUTES, API } from "../../helpers/constants";
+import { useApi } from "helpers/api";
+import { ROUTES, API } from "helpers/constants";
 
 const ListUser: React.FC = () => {
   // Hooks
   const { t } = useTranslation();
   let [searchParams, setSearchParams] = useSearchParams();
-  const [currPage, setCurrPage] = React.useState(
-    parseInt(searchParams.get("page") || "1")
-  );
+
+  const [currPage] = React.useState(parseInt(searchParams.get("page") || "1"));
   const [search, setSearch] = React.useState<string | null>(
     searchParams.get("search")
   );
@@ -56,21 +55,10 @@ const ListUser: React.FC = () => {
   }, [stateDelete]);
 
   // Methods
-  const onChangeSearch = (event: any) => {
-    setSearch(event.target.value || null);
-  };
-  const onBlurSearch = (event: any) => {
-    doSearch(1);
-  };
-
-  const onChangePage = (page: number) => () => {
-    doSearch(page);
-  };
-
   const doSearch = (page?: number) => {
     const params: any = {
       page: page || currPage,
-      search,
+      search: search ? search : "",
     };
 
     sendListUser({
@@ -80,6 +68,20 @@ const ListUser: React.FC = () => {
     });
 
     setSearchParams(params);
+  };
+
+  const onChangeSearch = (event: any) => {
+    if (event.target.value) {
+      setSearch(event.target.value);
+    }
+  };
+
+  const onBlurSearch = (event: any) => {
+    doSearch(1);
+  };
+
+  const onChangePage = (page: number) => () => {
+    doSearch(page);
   };
 
   const onClickDelete = (id: string) => () => {
@@ -94,7 +96,7 @@ const ListUser: React.FC = () => {
   const clickConfirmDelete = () => {
     sendDeleteRequest({
       method: "delete",
-      url: `${API.ADMIN_DELETE_USER}/${deleteId}`,
+      url: `${API.USERS}/${deleteId}`,
     });
     setShowDeleteModal(false);
     setShowResultModal(true);
@@ -112,6 +114,7 @@ const ListUser: React.FC = () => {
   const currentPage = tableData?.page || 1;
   const startIdx = tableData?.pageSize * (currentPage - 1);
   const totalPage = tableData?.totalPage | 1;
+
   return (
     <div className="main-content">
       {/* Body */}
@@ -119,8 +122,15 @@ const ListUser: React.FC = () => {
         <Card.Body>
           <Card.Title>
             <Row>
+              <Col className="d-flex align-items-end">
+                <Link to={ROUTES.USER_CREATE} className="btn btn-primary">
+                  {t("Create User")}
+                </Link>
+              </Col>
+            </Row>
+            <Row>
               <Col lg={5}>
-                <Form.Group as={Row} className="me-5">
+                <Form.Group className="me-5">
                   <Form.Label column>{t("Search")}</Form.Label>
                   <Form.Control
                     type="text"
@@ -129,11 +139,6 @@ const ListUser: React.FC = () => {
                     onChange={onChangeSearch}
                   />
                 </Form.Group>
-              </Col>
-              <Col md={2} className="d-flex align-items-end">
-                <Link to={ROUTES.USER_CREATE} className="btn btn-primary">
-                  {t("Create User")}
-                </Link>
               </Col>
             </Row>
           </Card.Title>

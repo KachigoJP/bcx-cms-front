@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useTranslation } from "react-i18next";
-import { useApi } from "../helpers/api";
-import { API, COOKIES } from "../helpers/constants";
+import { useApi } from "helpers/api";
+import { API, COOKIES } from "helpers/constants";
 
 // app imports
 

@@ -16,18 +16,18 @@ import {
   Spinner,
   Modal,
 } from "react-bootstrap";
-import OtpModal from "../../components/Modals/OtpModal";
-import ResponseModal from "../../components/Modals/ResponseModal";
-import BirthdatePicker from "../../components/Components/BirthdatePicker";
+import OtpModal from "components/Modals/OtpModal";
+import ResponseModal from "components/Modals/ResponseModal";
+import BirthdatePicker from "components/Components/BirthdatePicker";
 
 // Apps Imports
-import { AuthContext } from "../../contexts/auth";
-import { useApi, FieldError } from "../../helpers/api";
-import { ROUTES, API } from "../../helpers/constants";
-import Countries from "../../assets/json/countries.json";
-import PhoneCodes from "../../assets/json/phone_codes.json";
-import { getProfileFormSchema } from "../../helpers/schemas";
-import { IOtpForm, IProfileForm } from "../../helpers/interfaces";
+import { AuthContext } from "contexts/auth";
+import { useApi, FieldError } from "helpers/api";
+import { ROUTES, API } from "helpers/constants";
+import Countries from "assets/json/countries.json";
+import PhoneCodes from "assets/json/phone_codes.json";
+import { getProfileFormSchema } from "helpers/schemas";
+import { IOtpForm, IProfileForm } from "helpers/interfaces";
 
 const Profile: React.FC = () => {
   // Hooks
@@ -192,7 +192,7 @@ const Profile: React.FC = () => {
                   defaultValue={user?.gender}
                   {...register("gender")}
                 >
-                  <option value="">{t("Please select")}</option>
+                  <option>{t("Please select")}</option>
                   <option value="male">{t("Male")}</option>
                   <option value="female">{t("Female")}</option>
                 </Form.Select>
@@ -308,7 +308,6 @@ const Profile: React.FC = () => {
                       {...register("phoneCode")}
                     >
                       {PhoneCodes.map((item: any) => {
-                        console.log("Loading");
                         return (
                           <option key={item.code} value={item.dial_code}>
                             {`(+${item.dial_code}) ${item.name}`}

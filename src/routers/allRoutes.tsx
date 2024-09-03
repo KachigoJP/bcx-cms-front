@@ -2,37 +2,37 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 // App imports
-import { ROUTES } from "../helpers/constants";
+import { ROUTES } from "helpers/constants";
 
 const authRoutes = [
   {
     path: ROUTES.DASHBOARD,
-    component: React.lazy(() => import("../pages/Dashboard")),
+    component: React.lazy(() => import("pages/Dashboard")),
   },
   // Account
   {
     path: ROUTES.PROFILE,
-    component: React.lazy(() => import("../pages/Profile/Profile")),
+    component: React.lazy(() => import("pages/Profile/Profile")),
   },
   {
     path: ROUTES.PROFILE_EDIT,
-    component: React.lazy(() => import("../pages/Profile/ProfileEdit")),
+    component: React.lazy(() => import("pages/Profile/ProfileEdit")),
   },
   {
     path: ROUTES.PASSWORD_CHANGE,
-    component: React.lazy(() => import("../pages/Profile/PasswordChange")),
+    component: React.lazy(() => import("pages/Profile/PasswordChange")),
   },
   {
     path: ROUTES.VERIFICATION_2FA,
-    component: React.lazy(() => import("../pages/Profile/2FA")),
+    component: React.lazy(() => import("pages/Profile/2FA")),
   },
   {
     path: ROUTES.VERIFY_CHANGE_EMAIL,
-    component: React.lazy(() => import("../pages/Auth/VerifyChangeEmail")),
+    component: React.lazy(() => import("pages/Auth/VerifyChangeEmail")),
   },
   {
     path: ROUTES.SETTING,
-    component: React.lazy(() => import("../pages/Setting")),
+    component: React.lazy(() => import("pages/Setting")),
   },
   {
     path: ROUTES.HOME,
@@ -43,54 +43,54 @@ const authRoutes = [
   // USERS
   {
     path: ROUTES.USER_LIST,
-    component: React.lazy(() => import("../pages/Users/ListUser")),
+    component: React.lazy(() => import("pages/Users/ListUser")),
   },
   {
     path: ROUTES.USER_UPDATE,
-    component: React.lazy(() => import("../pages/Users/UpdateUser")),
+    component: React.lazy(() => import("pages/Users/UpdateUser")),
   },
   {
     path: ROUTES.USER_CREATE,
-    component: React.lazy(() => import("../pages/Users/CreateUser")),
+    component: React.lazy(() => import("pages/Users/CreateUser")),
   },
 ];
 
 const nonAuthRoutes = [
   {
     path: ROUTES.LOGIN,
-    component: React.lazy(() => import("../pages/Auth/Login")),
+    component: React.lazy(() => import("pages/Auth/Login")),
   },
   {
     path: ROUTES.REGISTER,
-    component: React.lazy(() => import("../pages/Auth/Register")),
+    component: React.lazy(() => import("pages/Auth/Register")),
   },
   {
     path: ROUTES.FORGOT_PASSWORD,
-    component: React.lazy(() => import("../pages/Auth/ForgotPassword")),
+    component: React.lazy(() => import("pages/Auth/ForgotPassword")),
   },
   {
     path: ROUTES.RESET_PASSWORD,
-    component: React.lazy(() => import("../pages/Auth/ResetPassword")),
+    component: React.lazy(() => import("pages/Auth/ResetPassword")),
   },
   {
     path: ROUTES.VERIFY_EMAIL,
-    component: React.lazy(() => import("../pages/Auth/VerifyEmail")),
+    component: React.lazy(() => import("pages/Auth/VerifyEmail")),
   },
   {
     path: ROUTES.MAINTENANCE,
-    component: React.lazy(() => import("../pages/Utility/Maintenance")),
+    component: React.lazy(() => import("pages/Utility/Maintenance")),
   },
   {
     path: ROUTES.PAGE_404,
-    component: React.lazy(() => import("../pages/Utility/404")),
+    component: React.lazy(() => import("pages/Utility/404")),
   },
   {
     path: ROUTES.PAGE_500,
-    component: React.lazy(() => import("../pages/Utility/500")),
+    component: React.lazy(() => import("pages/Utility/500")),
   },
   {
     path: ROUTES.VERIFY_CHANGE_EMAIL,
-    component: React.lazy(() => import("../pages/Auth/VerifyChangeEmail")),
+    component: React.lazy(() => import("pages/Auth/VerifyChangeEmail")),
   },
 ];
 

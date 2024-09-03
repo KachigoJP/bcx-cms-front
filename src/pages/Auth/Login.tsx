@@ -20,12 +20,12 @@ import {
 import { Link } from "react-router-dom";
 
 // Apps Imports
-import OtpModal from "../../components/Modals/OtpModal";
-import { AuthContext } from "../../contexts/auth";
-import { getLoginSchema } from "../../helpers/schemas";
-import { API, CAPTCHA_KEY, ROLE, ROUTES } from "../../helpers/constants";
-import { useApi, FieldError, isInitState } from "../../helpers/api";
-import { IForgotForm, ILoginForm, IOtpForm } from "../../helpers/interfaces";
+import OtpModal from "components/Modals/OtpModal";
+import { AuthContext } from "contexts/auth";
+import { getLoginSchema } from "helpers/schemas";
+import { API, CAPTCHA_KEY, ROLE, ROUTES } from "helpers/constants";
+import { useApi, FieldError, isInitState } from "helpers/api";
+import { IForgotForm, ILoginForm, IOtpForm } from "helpers/interfaces";
 import { ObjectSchema } from "yup";
 
 const Login: React.FC = () => {

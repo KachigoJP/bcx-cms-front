@@ -24,11 +24,11 @@ import {
 } from "react-icons/md";
 
 // App imports
-import { PrefContext } from "../../contexts/preferrence";
-import { AuthContext } from "../../contexts/auth";
-import { ROLE, ROUTES } from "../../helpers/constants";
-import { useApi } from "../../helpers/api";
-import { API } from "../../helpers/constants";
+import { PrefContext } from "contexts/preferrence";
+import { AuthContext } from "contexts/auth";
+import { ROLE, ROUTES } from "helpers/constants";
+import { useApi } from "helpers/api";
+import { API } from "helpers/constants";
 
 const Sidebar: React.FC = () => {
   const { t } = useTranslation();

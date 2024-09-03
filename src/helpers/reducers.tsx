@@ -1,4 +1,4 @@
-import { API_ACTION_TYPES, REGISTER_ACTION_TYPES } from "./constants";
+import { API_ACTION_TYPES, REGISTER_ACTION_TYPES } from "./constants/constants";
 import { RegisterState } from "./interfaces/types";
 
 type Action<T> = {

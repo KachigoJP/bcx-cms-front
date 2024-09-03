@@ -4,9 +4,9 @@ import React from "react";
 import { useCookies } from "react-cookie";
 
 // Apps Imports
-import { AuthContext } from "../contexts/auth";
-import { COOKIES, API_ACTION_TYPES } from "../helpers/constants";
-import { AuthState, fetchReducer } from "../helpers/reducers";
+import { AuthContext } from "contexts/auth";
+import { COOKIES, API_ACTION_TYPES } from "./constants/constants";
+import { AuthState, fetchReducer } from "helpers/reducers";
 
 export type Error = {
   [key: string]: string;

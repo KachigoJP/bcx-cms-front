@@ -3,6 +3,8 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Link, useSearchParams } from "react-router-dom";
+import { MdDelete, MdEdit } from "react-icons/md";
 
 // UI Imports
 import {
@@ -14,36 +16,131 @@ import {
   Alert,
   Spinner,
   Modal,
+  Table,
+  Pagination,
 } from "react-bootstrap";
-import { FieldError, useApi } from "../helpers/api";
-import { API } from "../helpers/constants";
-import { getAdminSettingSchema } from "../helpers/schemas";
-import ResponseModal from "../components/Modals/ResponseModal";
+
+// Sourece
+import { SettingType } from "helpers/interfaces";
+import { FieldError, useApi } from "helpers/api";
+import { API } from "helpers/constants";
+import ResponseModal from "components/Modals/ResponseModal";
+import SettingModal from "components/Modals/SettingModal";
 
 const Setting = () => {
   const { t } = useTranslation();
+  let [searchParams, setSearchParams] = useSearchParams();
+
+  const [currPage] = React.useState(parseInt(searchParams.get("page") || "1"));
+  const [search, setSearch] = React.useState<string | null>(
+    searchParams.get("search")
+  );
+  const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+  const [showSettingModal, setShowSettingModal] = React.useState(false);
   const [showResultModal, setShowResultModal] = React.useState(false);
+  const [deleteId, setDeleteId] = React.useState("");
+  const [updateSetting, setUpdateSetting] = React.useState<SettingType>();
 
-  const validationSchema = getAdminSettingSchema(t);
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    getValues,
-    formState: { errors },
-  } = useForm<any>({
-    resolver: yupResolver(validationSchema),
-  });
+  // APIS
+  const { state: stateSetting, sendRequest: sendGetSetting } = useApi();
+  const { state: stateDelete, sendRequest: sendDeleteRequest } = useApi();
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    if (!stateSetting.data) {
+      sendGetSetting({
+        method: "get",
+        url: API.SETTINGS,
+      });
+    }
+  }, []);
 
-  const onSubmit = (config: any) => {};
+  /*#### Methods #### */
+
+  // Search & Pagination
+  const doSearch = (page?: number) => {
+    const params: any = {
+      page: page || currPage,
+      search: search ? search : "",
+    };
+
+    sendGetSetting({
+      method: "get",
+      url: API.SETTINGS,
+      params,
+    });
+  };
+
+  const onChangeSearch = (event: any) => {
+    if (event.target.value) {
+      setSearch(event.target.value);
+    }
+  };
+
+  const onBlurSearch = (event: any) => {
+    doSearch(1);
+  };
+
+  const onChangePage = (page: number) => () => {
+    doSearch(page);
+  };
+
+  // Setting Modal
+  const onClickCreate = () => {
+    setUpdateSetting(undefined);
+    setShowSettingModal(true);
+  };
+
+  const onClickUpdate = (setting: SettingType) => () => {
+    setUpdateSetting(setting);
+    setShowSettingModal(true);
+  };
+
+  const closeSettingModal = (isSuccess = false) => {
+    setUpdateSetting(undefined);
+    setShowSettingModal(false);
+
+    if (isSuccess) {
+      setShowResultModal(true);
+    }
+  };
+
+  // Result Modal Method
+  const closeResultModal = () => {
+    setShowResultModal(false);
+
+    doSearch();
+  };
+
+  // Delete Modal method
+  const onClickDelete = (id: string) => () => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteId("");
+    setShowDeleteModal(false);
+  };
+
+  const clickConfirmDelete = () => {
+    sendDeleteRequest({
+      method: "delete",
+      url: `${API.SETTINGS}/${deleteId}`,
+    });
+    setShowDeleteModal(false);
+    setShowResultModal(true);
+  };
+
+  const tableData = stateSetting?.data?.data;
+  const currentPage = tableData?.page || 1;
+  const startIdx = tableData?.pageSize * (currentPage - 1);
+  const totalPage = tableData?.totalPage | 1;
 
   return (
     <div className="main-content h-100">
-      {/* {state.isError && state.errors ? (
+      {stateSetting.isError && stateSetting.errors ? (
         <Alert variant="danger">
-          {state.errors.map((field: FieldError, key: number) => {
+          {stateSetting.errors.map((field: FieldError, key: number) => {
             return (
               <React.Fragment key={key}>
                 <p>{`${t(field.name.toUpperCase())}`}</p>
@@ -58,146 +155,130 @@ const Setting = () => {
             );
           })}
         </Alert>
-      ) : null} */}
+      ) : null}
 
       <Card style={{ minHeight: "100%" }}>
         <Card.Body>
-          <Card.Title>{t("Pool Limit")}</Card.Title>
-          <Form className="col-xl-8" onSubmit={handleSubmit(onSubmit)}>
-            {/* <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t('Affiliate Rate')}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="number"
-                  step="any"
-                  {...register('affiliatePercentage', { valueAsNumber: true })}
-                />
-                <Form.Text className="text-danger">
-                  {errors.affiliatePercentage?.message}
-                </Form.Text>
+          <Card.Title>
+            <Row>
+              <Col className="d-flex align-items-end">
+                <Link
+                  to="#"
+                  onClick={onClickCreate}
+                  className="btn btn-primary"
+                >
+                  {t("Add New")}
+                </Link>
               </Col>
             </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("USD")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  step="any"
-                  type="number"
-                  {...register("usd", { valueAsNumber: true })}
-                />
-                <Form.Text className="text-danger">
-                  {errors.usd?.message}
-                </Form.Text>
+            <Row>
+              <Col lg={5}>
+                <Form.Group className="me-5">
+                  <Form.Label column>{t("Search")}</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={search || ""}
+                    onBlur={onBlurSearch}
+                    onChange={onChangeSearch}
+                  />
+                </Form.Group>
               </Col>
             </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("EUR")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  step="any"
-                  type="number"
-                  {...register("eur", { valueAsNumber: true })}
-                />
-                <Form.Text className="text-danger">
-                  {errors.eur?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("JPY")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  step="any"
-                  type="number"
-                  {...register("jpy", { valueAsNumber: true })}
-                />
-                <Form.Text className="text-danger">
-                  {errors.jpy?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("MXN")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  step="any"
-                  type="number"
-                  {...register("mxn", { valueAsNumber: true })}
-                />
-                <Form.Text className="text-danger">
-                  {errors.mxn?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("USDT")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  step="any"
-                  type="number"
-                  {...register("usdt", { valueAsNumber: true })}
-                />
-                <Form.Text className="text-danger">
-                  {errors.usdt?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("BNB")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  step="any"
-                  type="number"
-                  {...register("bnb", { valueAsNumber: true })}
-                />
-                <Form.Text className="text-danger">
-                  {errors.bnb?.message}
-                </Form.Text>
-              </Col>
-            </Row> */}
-
-            {/* {state.isLoading || stateConfig.isLoading ? (
-              <Button variant="primary" className="me-3 px-5" disabled>
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-                <span className="ms-1">{t("Loading...")}</span>
-              </Button>
-            ) : (
-              <Button variant="primary" type="submit" className="me-3 px-5">
-                {t("Confirm")}
-              </Button>
-            )} */}
-          </Form>
-
-          <Modal
-            show={showResultModal}
-            onHide={() => setShowResultModal((i) => !i)}
-            centered
+          </Card.Title>
+          <Table
+            className="table table-striped"
+            style={{ wordBreak: "break-word" }}
           >
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>{t("Key")}</th>
+                <th>{t("Label")}</th>
+                <th>{t("Value")}</th>
+                <th>{t("Description")}</th>
+                <th>{t("Actions")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tableData && tableData.totalItem > 0 ? (
+                tableData.data.map((item: SettingType, key: number) => {
+                  return (
+                    <tr key={key}>
+                      <td>{startIdx + (key + 1)}</td>
+                      <td>{item.key}</td>
+                      <td>{item.label}</td>
+                      <td>{item.value}</td>
+                      <td>{item.description}</td>
+                      <td style={{ whiteSpace: "nowrap" }}>
+                        <Link to="#" onClick={onClickUpdate(item)}>
+                          <MdEdit size={24} className="me-3 text-primary" />
+                        </Link>
+                        <Link to="#" onClick={onClickDelete(item.id)}>
+                          <MdDelete size={24} className="text-danger" />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={7} className="text-center">
+                    {t("No record")}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+          {tableData && tableData.totalItem > 0 ? (
+            <Pagination className="m-2">
+              <Pagination.First onClick={onChangePage(1)} />
+              {Array.from(
+                Array(totalPage === 1 ? totalPage : totalPage - 1).keys()
+              ).map((idx) => {
+                const page = idx + 1;
+                return (
+                  <Pagination.Item
+                    key={idx}
+                    onClick={onChangePage(page)}
+                    active={page === currentPage}
+                  >
+                    {page}
+                  </Pagination.Item>
+                );
+              })}
+              <Pagination.Last
+                onClick={onChangePage(tableData?.totalPage | 1)}
+              />
+            </Pagination>
+          ) : null}
+
+          {/* Modals */}
+          <SettingModal
+            data={updateSetting}
+            show={showSettingModal}
+            onClose={closeSettingModal}
+          />
+
+          <Modal show={showDeleteModal} onHide={closeDeleteModal} centered>
+            <Modal.Body className="text-center">
+              <MdDelete size="3em" color="#dc3545" />
+              <h3>{t("Delete Setting")}</h3>
+              {t(
+                "Warning! Once you delete the setting there's no getting it back. Make sure you want to delete it"
+              )}
+            </Modal.Body>
+            <Modal.Footer className="justify-content-center">
+              <Button onClick={closeDeleteModal}>{t("Close")}</Button>
+              <Button onClick={clickConfirmDelete}>{t("Delete")}</Button>
+            </Modal.Footer>
+          </Modal>
+
+          <Modal show={showResultModal} onHide={closeResultModal} centered>
             <ResponseModal
               type="success"
-              title={t("Update Settings")}
-              message={t("Your settings has been updated.")}
-              onClose={() => setShowResultModal((i) => !i)}
+              title={t("Success")}
+              message={t("Your request has been proccessed.")}
+              onClose={closeResultModal}
             />
           </Modal>
         </Card.Body>

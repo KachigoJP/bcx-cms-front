@@ -1,17 +1,17 @@
-import React from 'react'
-import { useTranslation } from 'react-i18next'
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 // UI Imports
-import { Toast } from 'react-bootstrap'
+import { Toast } from "react-bootstrap";
 
 // App Import menuDropdown
-import { PrefContext } from '../../contexts/preferrence'
+import { PrefContext } from "contexts/preferrence";
 
 const ToastSystem = (props: any) => {
   // Hooks
-  const { toastArr } = React.useContext(PrefContext)
-  const [show, setShow] = React.useState(false)
-  const { t } = useTranslation()
+  const { toastArr } = React.useContext(PrefContext);
+  const [show, setShow] = React.useState(false);
+  const { t } = useTranslation();
 
   return (
     <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide>
@@ -21,7 +21,7 @@ const ToastSystem = (props: any) => {
       </Toast.Header>
       <Toast.Body>Woohoo, you're reading this text in a Toast!</Toast.Body>
     </Toast>
-  )
-}
+  );
+};
 
-export default ToastSystem
+export default ToastSystem;

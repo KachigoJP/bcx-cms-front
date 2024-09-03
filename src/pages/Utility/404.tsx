@@ -1,9 +1,9 @@
 // React Imports
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
 
 // UI Imports
-import '../../scss/common/_404.scss'
+import "scss/common/_404.scss";
 
 // Apps Imports
 
@@ -21,7 +21,7 @@ const Page404: React.FC = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Page404
+export default Page404;

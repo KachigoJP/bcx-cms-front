@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
-import BirthdatePicker from "../../components/Components/BirthdatePicker";
+import BirthdatePicker from "components/Components/BirthdatePicker";
 import moment from "moment";
 
 // UI Imports
@@ -19,14 +19,14 @@ import {
   Alert,
   Modal,
 } from "react-bootstrap";
-import ResponseModal from "../../components/Modals/ResponseModal";
-import DatePicker from "../../components/Components/DatePicker";
+import ResponseModal from "components/Modals/ResponseModal";
+import DatePicker from "components/Components/DatePicker";
 
 // Apps Imports
-import { getResetPassSchema } from "../../helpers/schemas";
-import { useApi, FieldError } from "../../helpers/api";
-import { API, ROUTES } from "../../helpers/constants";
-import { IResetForm } from "../../helpers/interfaces";
+import { getResetPassSchema } from "helpers/schemas";
+import { useApi, FieldError } from "helpers/api";
+import { API, ROUTES } from "helpers/constants";
+import { IResetForm } from "helpers/interfaces";
 
 const ResetPassword: React.FC = () => {
   // Hooks

@@ -2,7 +2,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { FieldErrors, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ObjectSchema } from "yup";
 
@@ -17,17 +17,18 @@ import {
   Spinner,
   Modal,
 } from "react-bootstrap";
-import ResponseModal from "../../components/Modals/ResponseModal";
-import BirthdatePicker from "../../components/Components/BirthdatePicker";
 
 // Apps Imports
-import { getErrorText } from "../../helpers/functions";
-import PhoneCodes from "../../assets/json/phone_codes.json";
-import { useApi, FieldError } from "../../helpers/api";
-import { ROUTES, API } from "../../helpers/constants";
-import Countries from "../../assets/json/countries.json";
-import { getAdminUserSchema } from "../../helpers/schemas";
-import { IUserForm } from "../../helpers/interfaces";
+import ResponseModal from "components/Modals/ResponseModal";
+import BirthdatePicker from "components/Components/BirthdatePicker";
+import { getErrorText } from "helpers/functions";
+import PhoneCodes from "assets/json/phone_codes.json";
+import { useApi, FieldError } from "helpers/api";
+import { ROUTES, API } from "helpers/constants";
+import Countries from "assets/json/countries.json";
+import { getUserSchema } from "helpers/schemas";
+import { IUserForm } from "helpers/interfaces";
+import UserForm from "components/Forms/UserForm";
 
 const UpdateUser: React.FC = () => {
   // Hooks
@@ -38,29 +39,25 @@ const UpdateUser: React.FC = () => {
   const [showResultModal, setShowResultModal] = React.useState(false);
 
   // Form Validations
-  const validationSchema = getAdminUserSchema(t);
+  const validationSchema = getUserSchema(t);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm<IUserForm>({
+  const hookForm = useForm<IUserForm>({
     resolver: yupResolver(
       validationSchema as unknown as ObjectSchema<IUserForm>
     ),
   });
 
   // APIs
-  const { state, sendRequest } = useApi(`${API.ADMIN_UPDATE_USER}/${id}`);
-  const { state: stateUser, sendRequest: sendRequestUser } = useApi(
-    `${API.ADMIN_GET_USER}/${id}`
+  const { state: stateUpdate, sendRequest: sendUpdateUser } = useApi(
+    `${API.USERS}/${id}`
+  );
+  const { state: stateGet, sendRequest: sendGetUser } = useApi(
+    `${API.USERS}/${id}`
   );
 
   // Effects
   React.useEffect(() => {
-    sendRequestUser({
+    sendGetUser({
       method: "get",
     });
     return () => {};
@@ -68,10 +65,12 @@ const UpdateUser: React.FC = () => {
 
   // Effects
   React.useEffect(() => {
-    const response = stateUser.data;
+    const response = stateGet.data;
+
     if (response && response.status === 200) {
-      const user = response.data.data;
-      reset({
+      const user = response.data;
+
+      hookForm.reset({
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -82,48 +81,55 @@ const UpdateUser: React.FC = () => {
         country: user.country,
       });
     }
-  }, [stateUser]);
+  }, [stateGet]);
 
   React.useEffect(() => {
-    const response = state.data;
+    const response = stateUpdate.data;
+
     if (response && response.status === 200) {
       setShowResultModal(true);
     }
-    return () => {};
-  }, [state]);
 
-  // Methods
+    return () => {};
+  }, [stateUpdate]);
+
   const onSubmit = (data: IUserForm) => {
     const submitData = {
       ...data,
-      isKyc: parseInt(data.isKyc),
       is2FAEnabled: data.is2FAEnabled === "true",
       isVerified: data.isVerified === "true",
-      isInformationUpdated: data.isInformationUpdated === "true",
+      isAccountInit: data.isAccountInit === "true",
     };
-    // if (data.password === "") delete submitData?.password;
-    sendRequest({
+
+    if (data.password === "") {
+      delete submitData?.password;
+    }
+
+    sendUpdateUser({
       method: "put",
       data: submitData,
     });
   };
 
+  const onSubmitFail = (errors: FieldErrors<IUserForm>) => {
+    console.log("errs", errors);
+  };
+
   const goBack = () => {
     navigate(-1);
   };
+
   const closeResultModal = () => {
     setShowResultModal(false);
   };
 
-  const onBirthdateChange = (value: Date) => {
-    // setValue("dateOfBirth", value.toDateString());
-  };
-  const user = stateUser?.data?.data?.data || {};
+  const user = stateGet?.data?.data || {};
+
   return (
     <div className="main-content">
-      {state.isError && state.errors ? (
+      {stateUpdate.isError && stateUpdate.errors ? (
         <Alert variant="danger">
-          {state.errors.map((field: FieldError, key: number) => {
+          {stateUpdate.errors.map((field: FieldError, key: number) => {
             return (
               <React.Fragment key={key}>
                 <p>{`${t(field.name.toUpperCase())}`}</p>
@@ -143,317 +149,12 @@ const UpdateUser: React.FC = () => {
       {/* Body */}
       <Card>
         <Card.Body>
-          <Card.Title>{t("Edit user information")}</Card.Title>
-          <Form className="col-xl-8" onSubmit={handleSubmit(onSubmit)}>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Account Number")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.accountNumber}
-                  disabled
-                />
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Email")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.email}
-                  {...register("email")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.email?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Password")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control type="password" {...register("password")} />
-                <Form.Text className="text-danger">
-                  {errors.password?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            {/* <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Role")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select defaultValue={user?.role} {...register("role")}>
-                  <option value="">{t("Please select")}</option>
-                  <option value="master">{t("Master")}</option>
-                  <option value="affiliate">{t("Affiliate")}</option>
-                  <option value="normal">{t("Normal")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.role?.message}
-                </Form.Text>
-              </Col>
-            </Row> */}
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("First Name")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.firstName}
-                  {...register("firstName")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.firstName?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Last Name")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.lastName}
-                  {...register("lastName")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.lastName?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row>
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Date of Birth")}
-                <span className="text-danger">*</span>
-              </Form.Label>
-              <Col sm={8}>
-                <BirthdatePicker
-                  defaultValue={(user?.dateOfBirth
-                    ? new Date(user.dateOfBirth)
-                    : new Date(1970, 1, 1)
-                  ).toISOString()}
-                  onChange={onBirthdateChange}
-                />
-                <Form.Text className="text-danger">
-                  {errors.dateOfBirth?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Sex")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select
-                  defaultValue={user?.gender}
-                  {...register("gender")}
-                >
-                  <option value="">{t("Please select")}</option>
-                  <option value="male">{t("Male")}</option>
-                  <option value="female">{t("Female")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.gender?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Country")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select
-                  defaultValue={user?.country}
-                  {...register("country")}
-                >
-                  {Countries.map((country) => {
-                    return (
-                      <option key={country.id} value={country.alpha2}>
-                        {i18n.language === "jp" ? country.ja : country.en}
-                      </option>
-                    );
-                  })}
-                </Form.Select>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Region/State/Province")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.region}
-                  {...register("region")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.region?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("City")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.city}
-                  {...register("city")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.city?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Street")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue={user?.address}
-                  {...register("address")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.address?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Post Code")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  className="hide-arrow"
-                  type="number"
-                  defaultValue={user?.postcode}
-                  {...register("postcode")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.postcode?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Phone Number")}
-              </Form.Label>
-              <Col sm={6}>
-                <Row>
-                  <Col sm={4}>
-                    <Form.Select
-                      defaultValue={user?.phoneCode}
-                      {...register("phoneCode")}
-                    >
-                      {PhoneCodes.map((item: any) => {
-                        return (
-                          <option key={item.code} value={item.dial_code}>
-                            {`(+${item.dial_code}) ${item.name}`}
-                          </option>
-                        );
-                      })}
-                    </Form.Select>
-                    <Form.Text className="text-danger">
-                      {errors.phoneCode?.message}
-                    </Form.Text>
-                  </Col>
-                  <Col>
-                    <Form.Control
-                      className="hide-arrow"
-                      type="number"
-                      defaultValue={user?.phoneNumber}
-                      {...register("phoneNumber")}
-                    />
-                    <Form.Text className="text-danger">
-                      {errors.phoneNumber?.message}
-                    </Form.Text>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Verified?")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select
-                  defaultValue={user?.isVerified}
-                  {...register("isVerified")}
-                >
-                  <option value="false">{t("No")}</option>
-                  <option value="true">{t("Yes")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.isVerified?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("KYC Uploaded?")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select
-                  defaultValue={user?.isKyc}
-                  {...register("isKyc", {
-                    valueAsNumber: true,
-                  })}
-                >
-                  <option value={0}>{t("Not uploaded")}</option>
-                  <option value={1}>{t("Uploaded")}</option>
-                  <option value={2}>{t("Approved")}</option>
-                  <option value={3}>{t("Rejected")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.isKyc?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("2FA Active?")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select
-                  defaultValue={user?.is2FAEnabled}
-                  {...register("is2FAEnabled")}
-                >
-                  <option value="false">{t("No")}</option>
-                  <option value="true">{t("Yes")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.is2FAEnabled?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Profile Updated?")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select
-                  defaultValue={user?.isInformationUpdated}
-                  {...register("isInformationUpdated")}
-                >
-                  <option value="false">{t("No")}</option>
-                  <option value="true">{t("Yes")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.isInformationUpdated?.message}
-                </Form.Text>
-              </Col>
-            </Row>
+          <Card.Title>{t("User Detail")}</Card.Title>
+          <Form
+            className="col-xl-8"
+            onSubmit={hookForm.handleSubmit(onSubmit, onSubmitFail)}
+          >
+            <UserForm hookForm={hookForm} user={user} />
 
             <Button
               variant="dark"
@@ -464,7 +165,7 @@ const UpdateUser: React.FC = () => {
               {t("Back")}
             </Button>
 
-            {state.isLoading ? (
+            {stateUpdate.isLoading ? (
               <Button variant="primary" className="me-3 px-5" disabled>
                 <Spinner
                   as="span"

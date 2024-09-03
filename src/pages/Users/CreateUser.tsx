@@ -1,11 +1,10 @@
 // React Imports
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { FieldErrors, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import moment from "moment";
 
 // UI Imports
 import {
@@ -18,56 +17,52 @@ import {
   Spinner,
   Modal,
 } from "react-bootstrap";
-import ResponseModal from "../../components/Modals/ResponseModal";
 
-// Apps Imports
-import PhoneCodes from "../../assets/json/phone_codes.json";
-import { useApi, FieldError } from "../../helpers/api";
-import { ROUTES, API } from "../../helpers/constants";
-import { getErrorText } from "../../helpers/functions";
-import { REGEX, FIELD_LIMIT } from "../../helpers/constants";
-import { getAdminUserSchema } from "../../helpers/schemas";
-import Countries from "../../assets/json/countries.json";
-import BirthdatePicker from "../../components/Components/BirthdatePicker";
-import { IUserForm } from "../../helpers/interfaces";
+// Resource
+import ResponseModal from "components/Modals/ResponseModal";
+import { useApi, FieldError } from "helpers/api";
+import { ROUTES, API, FIELD_LIMIT, REGEX } from "helpers/constants";
+import { getUserSchema } from "helpers/schemas";
+import { IUserForm } from "helpers/interfaces";
+import UserForm from "components/Forms/UserForm";
+import { getErrorText } from "helpers/functions";
 
 const CreateUser: React.FC = () => {
   // Hooks
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [showResultModal, setShowResultModal] = React.useState(false);
 
   // Form Validations
-  const validationSchema = getAdminUserSchema(t).shape({
+  const validationSchema = getUserSchema(t).shape({
+    email: getErrorText(t, "email", {
+      required: true,
+      maxLength: FIELD_LIMIT.MAX_CHARACTER,
+      regex: REGEX.EMAIL,
+    }),
     password: (
       getErrorText(t, "password", {
         required: true,
-        maxLength: FIELD_LIMIT.MAX_PASSWORD,
-        minLength: FIELD_LIMIT.MIN_PASSWORD,
-        regexPassword: REGEX.PASSWORD,
       }) as Yup.StringSchema
-    ).matches(REGEX.PASSWORD, {
-      message: t(
-        "Password must have uppercase, lowercase, number and special characters: !~@#$%^&*-=`|(){}[]:;\"'<>,?/"
-      ),
-      excludeEmptyString: true,
-    }),
+    )
+      .matches(REGEX.PASSWORD, {
+        message: t(
+          "Password must have uppercase, lowercase, number and special characters: !~@#$%^&*-=`|(){}[]:;\"'<>,?/"
+        ),
+        excludeEmptyString: true,
+      })
+      .default(null),
   });
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<IUserForm>({
+  const hookForm = useForm<IUserForm>({
     resolver: yupResolver<IUserForm>(
       validationSchema as unknown as Yup.ObjectSchema<IUserForm>
     ),
   });
 
   // APIs
-  const { state, sendRequest } = useApi(`${API.ADMIN_CREATE_USER}`);
+  const { state, sendRequest } = useApi(API.USERS);
 
   // Effects
   React.useEffect(() => {
@@ -81,15 +76,19 @@ const CreateUser: React.FC = () => {
   const onSubmit = (data: IUserForm) => {
     const submitData = {
       ...data,
-      isKyc: parseInt(data.isKyc),
       is2FAEnabled: data.is2FAEnabled === "true",
       isVerified: data.isVerified === "true",
-      isInformationUpdated: data.isInformationUpdated === "true",
+      isAccountInit: data.isAccountInit === "true",
     };
+
     sendRequest({
       method: "post",
       data: submitData,
     });
+  };
+
+  const onSubmitFail = (errors: FieldErrors<IUserForm>) => {
+    console.log("errs", errors);
   };
 
   const goBack = () => {
@@ -98,10 +97,6 @@ const CreateUser: React.FC = () => {
   const closeResultModal = () => {
     setShowResultModal(false);
     navigate(ROUTES.USER_LIST);
-  };
-
-  const onBirthdateChange = (value: Date) => {
-    // setValue("dateOfBirth", value.toDateString());
   };
 
   return (
@@ -129,259 +124,11 @@ const CreateUser: React.FC = () => {
       <Card>
         <Card.Body>
           <Card.Title>{t("Create new user")}</Card.Title>
-          <Form className="col-xl-8" onSubmit={handleSubmit(onSubmit)}>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Email")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue=""
-                  {...register("email")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.email?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Password")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="password"
-                  defaultValue=""
-                  {...register("password")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.password?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("First Name")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control type="text" {...register("firstName")} />
-                <Form.Text className="text-danger">
-                  {errors.firstName?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Last Name")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control type="text" {...register("lastName")} />
-                <Form.Text className="text-danger">
-                  {errors.lastName?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row>
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Date of Birth")}
-                <span className="text-danger">*</span>
-              </Form.Label>
-              <Col sm={8}>
-                <BirthdatePicker
-                  defaultValue={moment()
-                    .utc()
-                    .year(1970)
-                    .startOf("year")
-                    .toISOString()}
-                  onChange={onBirthdateChange}
-                />
-                <Form.Text className="text-danger">
-                  {errors.dateOfBirth?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Sex")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select defaultValue="" {...register("gender")}>
-                  <option value="">{t("Please select")}</option>
-                  <option value="male">{t("Male")}</option>
-                  <option value="female">{t("Female")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.gender?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Country")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select defaultValue="" {...register("country")}>
-                  {Countries.map((country) => {
-                    return (
-                      <option key={country.id} value={country.alpha2}>
-                        {i18n.language === "jp" ? country.ja : country.en}
-                      </option>
-                    );
-                  })}
-                </Form.Select>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Region/State/Province")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue=""
-                  {...register("region")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.region?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("City")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  type="text"
-                  defaultValue=""
-                  {...register("city")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.city?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Street")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control type="text" {...register("address")} />
-                <Form.Text className="text-danger">
-                  {errors.address?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Post Code")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Control
-                  className="hide-arrow"
-                  type="number"
-                  {...register("postcode")}
-                />
-                <Form.Text className="text-danger">
-                  {errors.postcode?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Phone Number")}
-              </Form.Label>
-              <Col sm={6}>
-                <Row>
-                  <Col sm={4}>
-                    <Form.Select {...register("phoneCode")}>
-                      {PhoneCodes.map((item: any) => {
-                        return (
-                          <option key={item.code} value={item.dial_code}>
-                            {`(+${item.dial_code}) ${item.name}`}
-                          </option>
-                        );
-                      })}
-                    </Form.Select>
-                    <Form.Text className="text-danger">
-                      {errors.phoneCode?.message}
-                    </Form.Text>
-                  </Col>
-                  <Col>
-                    <Form.Control
-                      className="hide-arrow"
-                      type="number"
-                      {...register("phoneNumber")}
-                    />
-                    <Form.Text className="text-danger">
-                      {errors.phoneNumber?.message}
-                    </Form.Text>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Verified?")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select {...register("isVerified")}>
-                  <option value="">{t("Please select")}</option>
-                  <option value="true">{t("Yes")}</option>
-                  <option value="false">{t("No")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.isVerified?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("KYC Uploaded?")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select {...register("isKyc")}>
-                  <option value="">{t("Please select")}</option>
-                  <option value="0">{t("Not uploaded")}</option>
-                  <option value="1">{t("Uploaded")}</option>
-                  <option value="2">{t("Approved")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.isKyc?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("2FA Active?")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select {...register("is2FAEnabled")}>
-                  <option value="">{t("Please select")}</option>
-                  <option value="false">{t("No")}</option>
-                  <option value="true">{t("Yes")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.is2FAEnabled?.message}
-                </Form.Text>
-              </Col>
-            </Row>
-            <Row className="mb-3">
-              <Form.Label className="col-md-3 col-form-label">
-                {t("Profile Updated?")}
-              </Form.Label>
-              <Col sm={6}>
-                <Form.Select {...register("isInformationUpdated")}>
-                  <option value="">{t("Please select")}</option>
-                  <option value="true">{t("Yes")}</option>
-                  <option value="false">{t("No")}</option>
-                </Form.Select>
-                <Form.Text className="text-danger">
-                  {errors.isInformationUpdated?.message}
-                </Form.Text>
-              </Col>
-            </Row>
+          <Form
+            className="col-xl-8"
+            onSubmit={hookForm.handleSubmit(onSubmit, onSubmitFail)}
+          >
+            <UserForm hookForm={hookForm} />
 
             <Button
               variant="dark"

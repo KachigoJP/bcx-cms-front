@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { HOMEPAGE_LINKS } from "../../helpers/constants";
+import { HOMEPAGE_LINKS } from "helpers/constants";
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();

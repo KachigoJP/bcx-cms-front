@@ -5,14 +5,19 @@ import { Modal } from "react-bootstrap";
 
 // UI Imports
 import { Row, Button } from "react-bootstrap";
-import { MdDashboard, MdPerson } from "react-icons/md";
-import "../../scss/common/components/_dashboard.scss";
+import {
+  MdDashboard,
+  MdPerson,
+  MdSettings,
+  MdOutlineSentimentSatisfiedAlt,
+} from "react-icons/md";
+import "scss/common/components/_dashboard.scss";
 
 // App imports
-import { AuthContext } from "../../contexts/auth";
-import { PrefContext } from "../../contexts/preferrence";
-import { ROLE, ROUTES } from "../../helpers/constants";
-import LOGO from "../../assets/img/logo.svg";
+import { AuthContext } from "contexts/auth";
+import { PrefContext } from "contexts/preferrence";
+import { ROLE, ROUTES } from "helpers/constants";
+import LOGO from "assets/img/logo.svg";
 
 const Sidebar: React.FC = () => {
   const { t } = useTranslation();
@@ -101,21 +106,11 @@ const Sidebar: React.FC = () => {
             <li className="nav-item nav-category">{t("Front Page")}</li>
             <li
               className={`nav-item ${
-                location.pathname === ROUTES.SETTING ? "active" : ""
+                location.pathname === ROUTES.TESTIMONIAL ? "active" : ""
               }`}
             >
-              <Link to={ROUTES.SETTING} className="nav-link">
-                <MdDashboard className="link-icon" />
-                <span className="link-title">{t("Services")}</span>
-              </Link>
-            </li>
-            <li
-              className={`nav-item ${
-                location.pathname === ROUTES.SETTING ? "active" : ""
-              }`}
-            >
-              <Link to={ROUTES.SETTING} className="nav-link">
-                <MdDashboard className="link-icon" />
+              <Link to={ROUTES.TESTIMONIAL} className="nav-link">
+                <MdOutlineSentimentSatisfiedAlt className="link-icon" />
                 <span className="link-title">{t("Testimonials")}</span>
               </Link>
             </li>
@@ -125,29 +120,13 @@ const Sidebar: React.FC = () => {
               }`}
             >
               <Link to={ROUTES.SETTING} className="nav-link">
-                <MdDashboard className="link-icon" />
+                <MdSettings className="link-icon" />
                 <span className="link-title">{t("Setting")}</span>
               </Link>
             </li>
           </ul>
         </div>
       </nav>
-      <Modal show={showModal} onHide={() => setshowModal(false)}>
-        <Modal.Header closeButton></Modal.Header>
-        <Modal.Body>
-          <Row className="m-2">
-            <Button className="mb-2" onClick={onClickTest("normal")}>
-              {t("Login as User")}
-            </Button>
-            <Button className="mb-2" onClick={onClickTest("affiliate")}>
-              {t("Login as Affiliate")}
-            </Button>
-            <Button className="mb-2" onClick={onClickTest("master")}>
-              {t("Login as Tenant")}
-            </Button>
-          </Row>
-        </Modal.Body>
-      </Modal>
     </React.Fragment>
   );
 };

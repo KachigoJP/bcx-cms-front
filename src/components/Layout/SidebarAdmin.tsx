@@ -14,9 +14,9 @@ import {
 } from "react-icons/md";
 
 // App imports
-import { PrefContext } from "../../contexts/preferrence";
-import { ROUTES } from "../../helpers/constants";
-import LOGO from "../../assets/img/logo.svg";
+import { PrefContext } from "contexts/preferrence";
+import { ROUTES } from "helpers/constants";
+import LOGO from "assets/img/logo.svg";
 
 const Sidebar: React.FC = () => {
   const { t } = useTranslation();

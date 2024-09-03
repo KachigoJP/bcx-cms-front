@@ -17,14 +17,14 @@ import {
   Modal,
   Spinner,
 } from "react-bootstrap";
-import OtpModal from "../../components/Modals/OtpModal";
+import OtpModal from "components/Modals/OtpModal";
 
 // Apps Imports
-import { AuthContext } from "../../contexts/auth";
-import { getChangePassSchema } from "../../helpers/schemas";
-import { useApi, FieldError } from "../../helpers/api";
-import { API, ROUTES } from "../../helpers/constants";
-import { IChangePassForm, IOtpForm } from "../../helpers/interfaces";
+import { AuthContext } from "contexts/auth";
+import { getChangePassSchema } from "helpers/schemas";
+import { useApi, FieldError } from "helpers/api";
+import { API, ROUTES } from "helpers/constants";
+import { IChangePassForm, IOtpForm } from "helpers/interfaces";
 
 const PasswordChange: React.FC = () => {
   // Hooks

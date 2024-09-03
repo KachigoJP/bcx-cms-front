@@ -8,11 +8,11 @@ import moment from "moment";
 import { Form, Button, Row, Col, Card } from "react-bootstrap";
 
 // Apps Imports
-import { AuthContext } from "../../contexts/auth";
-import { getCountryName } from "../../helpers/functions";
-import { ROUTES, GENDER_OPTIONS, ROLE } from "../../helpers/constants";
-import { OptionItem } from "../../helpers/interfaces/types";
-import Languages from "../../assets/json/languages.json";
+import { AuthContext } from "contexts/auth";
+import { getCountryName } from "helpers/functions";
+import { ROUTES, GENDER_OPTIONS, ROLE } from "helpers/constants";
+import { OptionItem } from "helpers/interfaces/types";
+import Languages from "assets/json/languages.json";
 
 const Profile: React.FC = () => {
   // Hooks

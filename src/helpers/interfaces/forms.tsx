@@ -15,7 +15,7 @@ export interface IProfileForm {
 
 export interface IUserForm {
   email: string;
-  password: string;
+  password?: string;
   firstName: string;
   lastName: string;
   dateOfBirth: Date;
@@ -29,8 +29,7 @@ export interface IUserForm {
   phoneCode: string;
   phoneNumber: string;
   isVerified: string;
-  isKyc: string;
-  isInformationUpdated: string;
+  isAccountInit: string;
   is2FAEnabled: string;
 }
 export interface ILoginForm {
@@ -67,6 +66,16 @@ export interface IChangeMailForm {
   confirmEmail: string;
   otpToken?: number;
 }
-export type IOtpForm = {
+
+export interface IOtpForm {
   otpToken: number;
-};
+}
+
+export interface ISettingForm {
+  id?: string;
+  key: string;
+  label?: string;
+  value: string;
+  type: string;
+  description?: string;
+}

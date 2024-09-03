@@ -20,11 +20,11 @@ import {
 } from "react-bootstrap";
 
 // Apps Imports
-import { AuthContext } from "../../contexts/auth";
-import { useApi, FieldError } from "../../helpers/api";
-import { get2FASchema } from "../../helpers/schemas";
-import { ROUTES, API } from "../../helpers/constants";
-import { ITwoFAForm } from "../../helpers/interfaces";
+import { AuthContext } from "contexts/auth";
+import { useApi, FieldError } from "helpers/api";
+import { get2FASchema } from "helpers/schemas";
+import { ROUTES, API } from "helpers/constants";
+import { ITwoFAForm } from "helpers/interfaces";
 
 const TwoFA: React.FC = () => {
   // Hooks

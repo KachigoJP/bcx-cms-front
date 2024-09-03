@@ -17,15 +17,15 @@ import {
 import { MdOutlineCheckCircle } from "react-icons/md";
 
 // Apps Imports
-import { useApi, FieldError } from "../../helpers/api";
-import { RegisterReducer } from "../../helpers/reducers";
-import { RegisterState } from "../../helpers/interfaces/types";
+import { useApi, FieldError } from "helpers/api";
+import { RegisterReducer } from "helpers/reducers";
+import { RegisterState } from "helpers/interfaces/types";
 import {
   ROUTES,
   API,
   REGISTER_ACTION_TYPES,
   HOMEPAGE_LINKS,
-} from "../../helpers/constants";
+} from "helpers/constants";
 
 const Register: React.FC = () => {
   // Hooks

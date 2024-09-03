@@ -1,0 +1,26 @@
+export const ROUTES = {
+  LOGIN: "/login",
+  ADMIN_LOGIN: "/admin/login",
+  FORGOT_PASSWORD: "/forgot-password",
+  RESET_PASSWORD: "/auth/reset-password",
+  REGISTER: "/register",
+  PAGE_404: "/404",
+  PAGE_500: "/500",
+  MAINTENANCE: "/maintenance",
+  VERIFY_EMAIL: "/verify-email",
+  VERIFY_CHANGE_EMAIL: "/change-email",
+
+  HOME: "/",
+  DASHBOARD: "/dashboard",
+
+  PROFILE: "/profile",
+  PROFILE_EDIT: "/profile/edit",
+  EMAIL_CHANGE: "/email-change",
+  PASSWORD_CHANGE: "/password-change",
+  VERIFICATION_2FA: "/verification-2fa",
+  SETTING: "/setting",
+  TESTIMONIAL: "/testimonials",
+  USER_LIST: "/users",
+  USER_CREATE: "/users/create",
+  USER_UPDATE: "/users/:id",
+};

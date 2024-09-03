@@ -7,10 +7,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { MdAccountCircle } from "react-icons/md";
 
 // App imports
-import { AuthContext } from "../../../contexts/auth";
-import { ROUTES } from "../../../helpers/constants";
-import { useApi } from "../../../helpers/api";
-import { API, ROLE } from "../../../helpers/constants";
+import { AuthContext } from "contexts/auth";
+import { ROUTES } from "helpers/constants";
+import { useApi } from "helpers/api";
+import { API, ROLE } from "helpers/constants";
 
 const ProfileMenu = (props: any) => {
   const { t } = useTranslation();
@@ -41,21 +41,15 @@ const ProfileMenu = (props: any) => {
           {t("Profile")}
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          {user?.role !== ROLE.ADMIN ? (
-            <Dropdown.Item as={Link} to={ROUTES.PROFILE}>
-              {t("Account Settings")}
-            </Dropdown.Item>
-          ) : null}
-          {user?.role !== ROLE.ADMIN ? (
-            <Dropdown.Item as={Link} to={ROUTES.PASSWORD_CHANGE}>
-              {t("Change Password")}
-            </Dropdown.Item>
-          ) : null}
-          {user?.role !== ROLE.ADMIN ? (
-            <Dropdown.Item as={Link} to={ROUTES.VERIFICATION_2FA}>
+          <Dropdown.Item as={Link} to={ROUTES.PROFILE}>
+            {t("Account Settings")}
+          </Dropdown.Item>
+          <Dropdown.Item as={Link} to={ROUTES.PASSWORD_CHANGE}>
+            {t("Change Password")}
+          </Dropdown.Item>
+          {/* <Dropdown.Item as={Link} to={ROUTES.VERIFICATION_2FA}>
               {t("2FA Code Verification")}
-            </Dropdown.Item>
-          ) : null}
+            </Dropdown.Item> */}
           <Dropdown.Item as={Link} to="#" onClick={signOut}>
             {t("Logout")}
           </Dropdown.Item>

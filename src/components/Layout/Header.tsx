@@ -5,11 +5,11 @@ import { useTranslation } from "react-i18next";
 import { Form, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 // App Import menuDropdown
-import { AuthContext } from "../../contexts/auth";
+import { AuthContext } from "contexts/auth";
 import LanguageDropdown from "./Dropdown/LanguageDropdown";
 import ProfileMenu from "./Dropdown/ProfileMenu";
-import LOGO from "../../assets/img/logo.svg";
-import { ROLE } from "../../helpers/constants";
+import LOGO from "assets/img/logo.svg";
+import { ROLE } from "helpers/constants";
 
 const Header = (props: any) => {
   const { user } = React.useContext(AuthContext);

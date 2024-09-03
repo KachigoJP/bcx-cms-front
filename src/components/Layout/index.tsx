@@ -7,7 +7,7 @@ import SidebarMobile from "./SidebarMobile";
 import SidebarAdmin from "./SidebarAdmin";
 import SidebarAdminMobile from "./SidebarAdminMobile";
 import Footer from "./Footer";
-import { AuthContext } from "../../contexts/auth";
+import { AuthContext } from "contexts/auth";
 
 const Layout: React.FC<React.PropsWithChildren> = (props) => {
   const { user } = React.useContext(AuthContext);

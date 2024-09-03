@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { useCookies } from "react-cookie";
 
 // app imports
-import { COOKIES } from "../helpers/constants";
-import { AuthUser } from "../helpers/interfaces/types";
-import { useApi } from "../helpers/api";
-import { API } from "../helpers/constants";
+import { COOKIES } from "helpers/constants";
+import { AuthUser } from "helpers/interfaces/types";
+import { useApi } from "helpers/api";
+import { API } from "helpers/constants";
 
 type AuthProps = {
   isAuthenticated: boolean;
@@ -25,12 +25,6 @@ export const AuthContext = React.createContext<AuthProps>({
 
 const AuthProvider = (props: any) => {
   const [cookies] = useCookies([COOKIES.AUTH_USER]);
-
-  console.log(
-    "COOKIE",
-    cookies[COOKIES.AUTH_USER] != null &&
-      typeof cookies[COOKIES.AUTH_USER] !== "undefined"
-  );
 
   const [isAuthenticated, setAuthenticated] = React.useState(
     cookies[COOKIES.AUTH_USER] != null &&

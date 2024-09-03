@@ -14,7 +14,7 @@ export type AuthUser = {
   phoneCode: string;
   phoneNumber: string;
   is2FAEnabled: boolean;
-  isInformationUpdated: boolean;
+  isAccountInit: boolean;
   isKyc: number;
   language: string;
   role: string;
@@ -36,4 +36,13 @@ export type RegisterState = {
 export type OptionItem = {
   label: string;
   value: string;
+};
+
+export type SettingType = {
+  id: string;
+  key: string;
+  label: string;
+  value: string;
+  type: string;
+  description: string;
 };

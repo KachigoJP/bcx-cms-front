@@ -8,8 +8,8 @@ import { useSearchParams } from "react-router-dom";
 import { Container, Card, Row, Col, Alert } from "react-bootstrap";
 
 // Apps Imports
-import { useApi, FieldError } from "../../helpers/api";
-import { API, ROUTES } from "../../helpers/constants";
+import { useApi, FieldError } from "helpers/api";
+import { API, ROUTES } from "helpers/constants";
 
 const ResetPassword: React.FC = () => {
   // Hooks

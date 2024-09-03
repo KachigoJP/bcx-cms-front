@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import Countries from "../assets/json/countries.json";
+import Countries from "assets/json/countries.json";
 
 type Option = {
   email?: boolean;

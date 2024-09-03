@@ -7,10 +7,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Modal, Form, Spinner } from "react-bootstrap";
 
 // App imports
-import { getOtpSchema } from "../../helpers/schemas";
-import { FieldError } from "../../helpers/api";
+import { getOtpSchema } from "helpers/schemas";
+import { FieldError } from "helpers/api";
 import { ObjectSchema } from "yup";
-import { IOtpForm } from "../../helpers/interfaces";
+import { IOtpForm } from "helpers/interfaces";
 
 type ModalProps = {
   onSubmit: (data: IOtpForm) => void;

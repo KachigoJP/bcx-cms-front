@@ -20,11 +20,11 @@ import {
 import { Link } from "react-router-dom";
 
 // Apps Imports
-import { getForgotPassSchema } from "../../helpers/schemas";
-import { useApi, FieldError } from "../../helpers/api";
-import { API, ROUTES, CAPTCHA_KEY } from "../../helpers/constants";
-import ResponseModal from "../../components/Modals/ResponseModal";
-import { IForgotForm } from "../../helpers/interfaces";
+import { getForgotPassSchema } from "helpers/schemas";
+import { useApi, FieldError } from "helpers/api";
+import { API, ROUTES, CAPTCHA_KEY } from "helpers/constants";
+import ResponseModal from "components/Modals/ResponseModal";
+import { IForgotForm } from "helpers/interfaces";
 
 const ForgotPassword: React.FC = () => {
   // Hooks

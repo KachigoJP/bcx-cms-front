@@ -8,8 +8,8 @@ import moment from "moment";
 import { Row, Col, Card, Table, Accordion } from "react-bootstrap";
 
 // Apps Imports
-import { useApi } from "../helpers/api";
-import { API, ROUTES } from "../helpers/constants";
+import { useApi } from "helpers/api";
+import { API, ROUTES } from "helpers/constants";
 
 const Dashboard: React.FC = () => {
   // Hooks
