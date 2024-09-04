@@ -1,5 +1,5 @@
 import { UseFormReturn } from "react-hook-form";
-import { AuthUser, SettingType } from "./types";
+import { AuthUser, PageCategoryType, SettingType } from "./types";
 import { IUserForm } from "./forms";
 
 export interface AuthProps {
@@ -16,9 +16,14 @@ export interface UserFormProps {
   hookForm: UseFormReturn<IUserForm>;
 }
 
-export interface SettingFormProps {
+export interface SettingModalProps {
   show: boolean;
   data?: SettingType;
   onClose?: (isSuccess?: boolean) => void;
-  // hookForm: UseFormReturn<IUserForm>;
+}
+
+export interface PageCategoryModalProps {
+  show: boolean;
+  data?: PageCategoryType;
+  onClose?: (isSuccess?: boolean) => void;
 }

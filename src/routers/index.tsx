@@ -6,13 +6,13 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 
 // App imports
+import { ROUTES } from "helpers/constants";
 import { AuthContext } from "contexts/auth";
 import NonLayout from "components/Layout/NonLayout";
 import Layout from "components/Layout";
 import NotFound from "pages/Utility/404";
 
 import { authRoutes, nonAuthRoutes } from "./allRoutes";
-import { ROUTES } from "helpers/constants";
 
 type RouteProps = {
   component: React.FC;

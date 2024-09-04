@@ -79,3 +79,10 @@ export interface ISettingForm {
   type: string;
   description?: string;
 }
+
+export interface IPageCategoryForm {
+  id?: string;
+  name: string;
+  slug?: string;
+  description?: string;
+}

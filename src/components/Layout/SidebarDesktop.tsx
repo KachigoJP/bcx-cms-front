@@ -10,6 +10,7 @@ import {
   MdPerson,
   MdSettings,
   MdOutlineSentimentSatisfiedAlt,
+  MdCategory,
 } from "react-icons/md";
 import "scss/common/components/_dashboard.scss";
 
@@ -99,6 +100,19 @@ const Sidebar: React.FC = () => {
               <Link to={ROUTES.USER_LIST} className="nav-link">
                 <MdPerson className="link-icon" />
                 <span className="link-title">{t("Users")}</span>
+              </Link>
+            </li>
+          </ul>
+          <ul className="nav">
+            <li className="nav-item nav-category">{t("Pages")}</li>
+            <li
+              className={`nav-item ${
+                location.pathname === ROUTES.PAGE_CATEGORY ? "active" : ""
+              }`}
+            >
+              <Link to={ROUTES.PAGE_CATEGORY} className="nav-link">
+                <MdCategory className="link-icon" />
+                <span className="link-title">{t("Categories")}</span>
               </Link>
             </li>
           </ul>

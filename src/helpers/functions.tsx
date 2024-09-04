@@ -140,3 +140,12 @@ export const getCountryName = (code: string, lang: string = "en") => {
     return country[showLang];
   }
 };
+
+export const generateSlug = (name: string) => {
+  return name
+    .toLowerCase() // Convert to lowercase
+    .trim() // Trim whitespace from both sides of the string
+    .replace(/[^\w\s-]/g, "") // Remove all non-word characters except spaces and hyphens
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-"); // Replace multiple hyphens with a single hyphen
+};

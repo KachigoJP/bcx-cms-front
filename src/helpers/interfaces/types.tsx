@@ -46,3 +46,10 @@ export type SettingType = {
   type: string;
   description: string;
 };
+
+export type PageCategoryType = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+};

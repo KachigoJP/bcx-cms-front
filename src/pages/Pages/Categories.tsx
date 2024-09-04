@@ -19,13 +19,13 @@ import {
 } from "react-bootstrap";
 
 // Sourece
-import { SettingType } from "helpers/interfaces";
+import { PageCategoryType } from "helpers/interfaces";
 import { FieldError, useApi } from "helpers/api";
 import { API } from "helpers/constants";
 import ResponseModal from "components/Modals/ResponseModal";
-import SettingModal from "components/Modals/SettingModal";
+import PageCategoryModal from "components/Modals/PageCategoryModal";
 
-const Setting = () => {
+const PageCategories = () => {
   const { t } = useTranslation();
   let [searchParams, setSearchParams] = useSearchParams();
 
@@ -34,10 +34,11 @@ const Setting = () => {
     searchParams.get("search")
   );
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
-  const [showSettingModal, setShowSettingModal] = React.useState(false);
+  const [showCategoryModal, setShowCategoryModal] = React.useState(false);
   const [showResultModal, setShowResultModal] = React.useState(false);
   const [deleteId, setDeleteId] = React.useState("");
-  const [updateSetting, setUpdateSetting] = React.useState<SettingType>();
+  const [updateCategory, setUpdateCategory] =
+    React.useState<PageCategoryType>();
 
   // APIS
   const { state: stateSetting, sendRequest: sendGetSetting } = useApi();
@@ -45,10 +46,7 @@ const Setting = () => {
 
   React.useEffect(() => {
     if (!stateSetting.data) {
-      sendGetSetting({
-        method: "get",
-        url: API.SETTINGS,
-      });
+      doSearch();
     }
   }, []);
 
@@ -63,7 +61,7 @@ const Setting = () => {
 
     sendGetSetting({
       method: "get",
-      url: API.SETTINGS,
+      url: API.PAGE_CATEGORIES,
       params,
     });
   };
@@ -86,18 +84,18 @@ const Setting = () => {
 
   // Setting Modal
   const onClickCreate = () => {
-    setUpdateSetting(undefined);
-    setShowSettingModal(true);
+    setUpdateCategory(undefined);
+    setShowCategoryModal(true);
   };
 
-  const onClickUpdate = (setting: SettingType) => () => {
-    setUpdateSetting(setting);
-    setShowSettingModal(true);
+  const onClickUpdate = (setting: PageCategoryType) => () => {
+    setUpdateCategory(setting);
+    setShowCategoryModal(true);
   };
 
   const closeSettingModal = (isSuccess = false) => {
-    setUpdateSetting(undefined);
-    setShowSettingModal(false);
+    setUpdateCategory(undefined);
+    setShowCategoryModal(false);
 
     if (isSuccess) {
       setShowResultModal(true);
@@ -125,7 +123,7 @@ const Setting = () => {
   const clickConfirmDelete = () => {
     sendDeleteRequest({
       method: "delete",
-      url: `${API.SETTINGS}/${deleteId}`,
+      url: `${API.PAGE_CATEGORIES}/${deleteId}`,
     });
     setShowDeleteModal(false);
     setShowResultModal(true);
@@ -192,25 +190,21 @@ const Setting = () => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>{t("Key")}</th>
-                <th>{t("Type")}</th>
-                <th>{t("Label")}</th>
+                <th>{t("Name")}</th>
+                <th>{t("Slug")}</th>
                 <th>{t("Description")}</th>
-                <th>{t("Value")}</th>
                 <th>{t("Actions")}</th>
               </tr>
             </thead>
             <tbody>
               {tableData && tableData.totalItem > 0 ? (
-                tableData.data.map((item: SettingType, key: number) => {
+                tableData.data.map((item: PageCategoryType, key: number) => {
                   return (
                     <tr key={key}>
                       <td>{startIdx + (key + 1)}</td>
-                      <td>{item.key}</td>
-                      <td>{item.type}</td>
-                      <td>{item.label}</td>
+                      <td>{item.name}</td>
+                      <td>{item.slug}</td>
                       <td>{item.description}</td>
-                      <td style={{ textOverflow: "ellipsis" }}>{item.value}</td>
                       <td style={{ whiteSpace: "nowrap" }}>
                         <Link to="#" onClick={onClickUpdate(item)}>
                           <MdEdit size={24} className="me-3 text-primary" />
@@ -255,9 +249,9 @@ const Setting = () => {
           ) : null}
 
           {/* Modals */}
-          <SettingModal
-            data={updateSetting}
-            show={showSettingModal}
+          <PageCategoryModal
+            data={updateCategory}
+            show={showCategoryModal}
             onClose={closeSettingModal}
           />
 
@@ -289,4 +283,4 @@ const Setting = () => {
   );
 };
 
-export default Setting;
+export default PageCategories;

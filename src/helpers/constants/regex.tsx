@@ -9,4 +9,5 @@ export const REGEX = {
   OTP_CODE: /(^$|^[0-9]{6,6})/,
   RESET_CONFIRM_CODE: /(^$|^[0-9]{5,5})/,
   FLOAT_NUMBER: /(^$|^[0-9]+.?[0-9]*$)/,
+  SLUG: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
 };

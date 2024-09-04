@@ -23,4 +23,5 @@ export const ROUTES = {
   USER_LIST: "/users",
   USER_CREATE: "/users/create",
   USER_UPDATE: "/users/:id",
+  PAGE_CATEGORY: "/pages/categories",
 };

@@ -8,7 +8,7 @@ import moment from "moment";
 import { Row, Col, Card, Accordion } from "react-bootstrap";
 
 // Apps Imports
-import { useApi, isInitState } from "helpers/api";
+import { useApi } from "helpers/api";
 import { API, ROUTES } from "helpers/constants";
 
 const Notice: React.FC = () => {

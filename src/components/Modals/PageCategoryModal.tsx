@@ -6,24 +6,25 @@ import { ObjectSchema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // Source
-import { ISettingForm, SettingModalProps } from "helpers/interfaces";
+import { IPageCategoryForm, PageCategoryModalProps } from "helpers/interfaces";
 import { useApi, FieldError } from "helpers/api";
-import { API, FIELDTYPE_OPTIONS } from "helpers/constants";
-import { getSettingSchema } from "helpers/schemas";
+import { API } from "helpers/constants";
+import { getPageCategorySchema } from "helpers/schemas";
+import * as Helpers from "helpers/functions";
 
-const SettingModal: React.FC<SettingModalProps> = (props) => {
+const PageCategoryModal: React.FC<PageCategoryModalProps> = (props) => {
   const { t, i18n } = useTranslation();
 
   const { data, show, onClose } = props;
 
   const {
-    state: stateSetting,
+    state: stateCategory,
     sendRequest: sendUpdateRequest,
     reset: resetReqest,
   } = useApi();
 
   // Form Validations
-  const validationSchema = getSettingSchema(t);
+  const validationSchema = getPageCategorySchema(t);
 
   const {
     register,
@@ -31,9 +32,11 @@ const SettingModal: React.FC<SettingModalProps> = (props) => {
     formState: { errors },
     reset,
     clearErrors,
-  } = useForm<ISettingForm>({
+    setValue,
+    watch,
+  } = useForm<IPageCategoryForm>({
     resolver: yupResolver(
-      validationSchema as unknown as ObjectSchema<ISettingForm>
+      validationSchema as unknown as ObjectSchema<IPageCategoryForm>
     ),
   });
 
@@ -41,25 +44,21 @@ const SettingModal: React.FC<SettingModalProps> = (props) => {
   React.useEffect(() => {
     reset({
       id: data?.id,
-      key: data?.key || "",
-      type: data?.type || "",
-      label: data?.label || "",
-      value: data?.value || "",
+      name: data?.name || "",
+      slug: data?.slug || "",
       description: data?.description || "",
     });
   }, [data]);
 
   React.useEffect(() => {
-    const response = stateSetting.data;
+    const response = stateCategory.data;
 
     if (response && response.status === 200) {
       if (onClose) {
         reset({
           id: data?.id,
-          key: data?.key || "",
-          type: data?.type || "",
-          label: data?.label || "",
-          value: data?.value || "",
+          name: data?.name || "",
+          slug: data?.slug || "",
           description: data?.description || "",
         });
         clearErrors();
@@ -68,27 +67,36 @@ const SettingModal: React.FC<SettingModalProps> = (props) => {
         onClose(true);
       }
     }
-  }, [stateSetting]);
+  }, [stateCategory]);
+
+  React.useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      if (name == "name" && value.name) {
+        setValue("slug", Helpers.generateSlug(value.name));
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   // Method
-  const onSubmit = (data: ISettingForm) => {
-    console.log("DATA", data);
+  const onSubmit = (data: IPageCategoryForm) => {
     if (data?.id) {
       sendUpdateRequest({
         method: "put",
-        url: `${API.SETTINGS}/${data?.id}`,
+        url: `${API.PAGE_CATEGORIES}/${data?.id}`,
         data,
       });
     } else {
       sendUpdateRequest({
         method: "post",
-        url: `${API.SETTINGS}`,
+        url: `${API.PAGE_CATEGORIES}`,
         data,
       });
     }
   };
 
-  const onSubmitFail = (errors: FieldErrors<ISettingForm>) => {
+  const onSubmitFail = (errors: FieldErrors<IPageCategoryForm>) => {
     console.log("errs", errors);
   };
 
@@ -104,13 +112,13 @@ const SettingModal: React.FC<SettingModalProps> = (props) => {
     <Modal size="lg" show={show} onHide={onClose} centered>
       <Form onSubmit={handleSubmit(onSubmit, onSubmitFail)}>
         <Modal.Title style={{ margin: "20px 10px", fontWeight: "600" }}>
-          {t("Update Setting")}
+          {t("Page Category")}
         </Modal.Title>
         <Modal.Body className="text-center">
           <Row>
-            {stateSetting.isError && stateSetting.errors ? (
+            {stateCategory.isError && stateCategory.errors ? (
               <Alert variant="danger" className="text-start">
-                {stateSetting.errors.map((field: FieldError, key: number) => {
+                {stateCategory.errors.map((field: FieldError, key: number) => {
                   return (
                     <React.Fragment key={key}>
                       <p>{`${t(field.name.toUpperCase())}`}</p>
@@ -129,81 +137,31 @@ const SettingModal: React.FC<SettingModalProps> = (props) => {
           </Row>
           <Row className="mb-3">
             <Form.Label className="col-md-3 col-form-label">
-              {t("Type")}
-            </Form.Label>
-            <Col sm={8} className="text-start">
-              <Form.Select defaultValue={data?.type} {...register("type")}>
-                <option>{t("Please select")}</option>
-                {FIELDTYPE_OPTIONS.map((item, idx) => {
-                  return (
-                    <option key={idx} value={item.value}>
-                      {t(item.label)}
-                    </option>
-                  );
-                })}
-              </Form.Select>
-              <Form.Text className="text-danger">
-                {errors.type?.message}
-              </Form.Text>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Form.Label className="col-md-3 col-form-label">
-              {t("Key")}
+              {t("Name")}
             </Form.Label>
             <Col sm={8} className="text-start">
               <Form.Control
                 type="text"
-                defaultValue={data?.key}
-                {...register("key")}
+                defaultValue={data?.name}
+                {...register("name")}
               />
               <Form.Text className="text-danger">
-                {errors.key?.message}
+                {errors.name?.message}
               </Form.Text>
             </Col>
           </Row>
           <Row className="mb-3">
             <Form.Label className="col-md-3 col-form-label">
-              {t("Label")}
+              {t("Slug")}
             </Form.Label>
             <Col sm={8} className="text-start">
               <Form.Control
                 type="text"
-                defaultValue={data?.label}
-                {...register("label")}
+                defaultValue={data?.slug}
+                {...register("slug")}
               />
               <Form.Text className="text-danger">
-                {errors.label?.message}
-              </Form.Text>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Form.Label className="col-md-3 col-form-label">
-              {t("Value")}
-            </Form.Label>
-            <Col sm={8} className="text-start">
-              {(() => {
-                if (data && data?.type === "richtext") {
-                  return (
-                    <Form.Control
-                      as="textarea"
-                      rows={5}
-                      defaultValue={data?.value}
-                      {...register("value")}
-                    />
-                  );
-                } else {
-                  return (
-                    <Form.Control
-                      type="text"
-                      defaultValue={data?.value}
-                      {...register("value")}
-                    />
-                  );
-                }
-              })()}
-              <Form.Text className="text-danger">
-                {errors.value?.message}
+                {errors.slug?.message}
               </Form.Text>
             </Col>
           </Row>
@@ -227,7 +185,7 @@ const SettingModal: React.FC<SettingModalProps> = (props) => {
         <Modal.Footer className="justify-content-center">
           <Button onClick={onCloseModal}>{t("Close")}</Button>
           <Button type="submit">
-            {stateSetting.isLoading ? (
+            {stateCategory.isLoading ? (
               <>
                 <Spinner
                   as="span"
@@ -239,7 +197,7 @@ const SettingModal: React.FC<SettingModalProps> = (props) => {
                 <span className="ms-1">{t("Loading...")}</span>
               </>
             ) : (
-              t("Update")
+              t("Confirm")
             )}
           </Button>
         </Modal.Footer>
@@ -248,4 +206,4 @@ const SettingModal: React.FC<SettingModalProps> = (props) => {
   );
 };
 
-export default SettingModal;
+export default PageCategoryModal;

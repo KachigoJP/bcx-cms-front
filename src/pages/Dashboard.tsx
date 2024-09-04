@@ -2,13 +2,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import moment from "moment";
 
 // UI Imports
 import { Row, Col, Card, Table, Accordion } from "react-bootstrap";
 
 // Apps Imports
-import { useApi } from "helpers/api";
 import { API, ROUTES } from "helpers/constants";
 
 const Dashboard: React.FC = () => {

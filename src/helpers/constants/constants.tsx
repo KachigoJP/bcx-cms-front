@@ -73,11 +73,6 @@ export const API_ACTION_TYPES = {
   FETCH_RESET: "FETCH_RESET",
 };
 
-export const GENDER_OPTIONS = [
-  { value: "male", label: "Male" },
-  { value: "female", label: "Female" },
-];
-
 export const HOMEPAGE_LINKS = {
   HOME: "https://www.banchanxanh.com",
   ABOUT: "https://www.banchanxanh.com/about",

@@ -6,6 +6,11 @@ import { ROUTES } from "helpers/constants";
 
 const authRoutes = [
   {
+    path: ROUTES.HOME,
+    exact: true,
+    component: () => <Navigate to={ROUTES.DASHBOARD} />,
+  },
+  {
     path: ROUTES.DASHBOARD,
     component: React.lazy(() => import("pages/Dashboard")),
   },
@@ -34,10 +39,10 @@ const authRoutes = [
     path: ROUTES.SETTING,
     component: React.lazy(() => import("pages/Setting")),
   },
+  // PAGES
   {
-    path: ROUTES.HOME,
-    exact: true,
-    component: () => <Navigate to={ROUTES.DASHBOARD} />,
+    path: ROUTES.PAGE_CATEGORY,
+    component: React.lazy(() => import("pages/Pages/Categories")),
   },
 
   // USERS
@@ -52,6 +57,10 @@ const authRoutes = [
   {
     path: ROUTES.USER_CREATE,
     component: React.lazy(() => import("pages/Users/CreateUser")),
+  },
+  {
+    path: ROUTES.TESTIMONIAL,
+    component: React.lazy(() => import("pages/Testimonials")),
   },
 ];
 

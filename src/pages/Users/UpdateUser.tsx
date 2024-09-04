@@ -1,7 +1,7 @@
 // React Imports
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FieldErrors, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ObjectSchema } from "yup";
@@ -20,12 +20,8 @@ import {
 
 // Apps Imports
 import ResponseModal from "components/Modals/ResponseModal";
-import BirthdatePicker from "components/Components/BirthdatePicker";
-import { getErrorText } from "helpers/functions";
-import PhoneCodes from "assets/json/phone_codes.json";
 import { useApi, FieldError } from "helpers/api";
-import { ROUTES, API } from "helpers/constants";
-import Countries from "assets/json/countries.json";
+import { API } from "helpers/constants";
 import { getUserSchema } from "helpers/schemas";
 import { IUserForm } from "helpers/interfaces";
 import UserForm from "components/Forms/UserForm";
