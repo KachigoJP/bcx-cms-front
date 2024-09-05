@@ -274,6 +274,24 @@ export const getPageCategorySchema = (t: TFunction) => {
   });
 };
 
+export const getPageTagSchema = (t: TFunction) => {
+  return Yup.object().shape({
+    name: getErrorText(t, "name", {
+      required: true,
+      minLength: 1,
+      maxLength: FIELD_LIMIT.MAX_CHARACTER,
+    }),
+    slug: (
+      getErrorText(t, "slug", {
+        required: true,
+        maxLength: FIELD_LIMIT.MAX_CHARACTER,
+      }) as Yup.StringSchema
+    ).matches(REGEX.SLUG, {
+      message: t("slug must have only lowercase and characters: -, _"),
+    }),
+  });
+};
+
 export const getUserSchema = (t: TFunction) => {
   return Yup.object().shape({
     password: (

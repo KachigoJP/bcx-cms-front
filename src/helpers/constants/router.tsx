@@ -23,5 +23,9 @@ export const ROUTES = {
   USER_LIST: "/users",
   USER_CREATE: "/users/create",
   USER_UPDATE: "/users/:id",
-  PAGE_CATEGORY: "/pages/categories",
+  PAGES: "/pages",
+  PAGES_CREATE: "/pages/create",
+  PAGES_UPDATE: "/pages/:id",
+  PAGE_CATEGORIES: "/pages/categories",
+  PAGE_TAGS: "/pages/tags",
 };

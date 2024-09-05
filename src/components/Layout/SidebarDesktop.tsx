@@ -11,6 +11,8 @@ import {
   MdSettings,
   MdOutlineSentimentSatisfiedAlt,
   MdCategory,
+  MdLocalOffer,
+  MdOutlineWeb,
 } from "react-icons/md";
 import "scss/common/components/_dashboard.scss";
 
@@ -107,12 +109,32 @@ const Sidebar: React.FC = () => {
             <li className="nav-item nav-category">{t("Pages")}</li>
             <li
               className={`nav-item ${
-                location.pathname === ROUTES.PAGE_CATEGORY ? "active" : ""
+                location.pathname === ROUTES.PAGES ? "active" : ""
               }`}
             >
-              <Link to={ROUTES.PAGE_CATEGORY} className="nav-link">
+              <Link to={ROUTES.PAGES} className="nav-link">
+                <MdOutlineWeb className="link-icon" />
+                <span className="link-title">{t("List")}</span>
+              </Link>
+            </li>
+            <li
+              className={`nav-item ${
+                location.pathname === ROUTES.PAGE_CATEGORIES ? "active" : ""
+              }`}
+            >
+              <Link to={ROUTES.PAGE_CATEGORIES} className="nav-link">
                 <MdCategory className="link-icon" />
                 <span className="link-title">{t("Categories")}</span>
+              </Link>
+            </li>
+            <li
+              className={`nav-item ${
+                location.pathname === ROUTES.PAGE_TAGS ? "active" : ""
+              }`}
+            >
+              <Link to={ROUTES.PAGE_TAGS} className="nav-link">
+                <MdLocalOffer className="link-icon" />
+                <span className="link-title">{t("Tags")}</span>
               </Link>
             </li>
           </ul>

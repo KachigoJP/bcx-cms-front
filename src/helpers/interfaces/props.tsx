@@ -1,5 +1,5 @@
 import { UseFormReturn } from "react-hook-form";
-import { AuthUser, PageCategoryType, SettingType } from "./types";
+import { AuthUser, PageCategoryType, PageTagType, SettingType } from "./types";
 import { IUserForm } from "./forms";
 
 export interface AuthProps {
@@ -25,5 +25,11 @@ export interface SettingModalProps {
 export interface PageCategoryModalProps {
   show: boolean;
   data?: PageCategoryType;
+  onClose?: (isSuccess?: boolean) => void;
+}
+
+export interface PageTagModalProps {
+  show: boolean;
+  data?: PageTagType;
   onClose?: (isSuccess?: boolean) => void;
 }

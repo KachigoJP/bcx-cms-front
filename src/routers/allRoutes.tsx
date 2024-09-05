@@ -41,8 +41,24 @@ const authRoutes = [
   },
   // PAGES
   {
-    path: ROUTES.PAGE_CATEGORY,
+    path: ROUTES.PAGES,
+    component: React.lazy(() => import("pages/Pages")),
+  },
+  {
+    path: ROUTES.PAGES_UPDATE,
+    component: React.lazy(() => import("pages/Users/UpdateUser")),
+  },
+  {
+    path: ROUTES.PAGES_CREATE,
+    component: React.lazy(() => import("pages/Users/CreateUser")),
+  },
+  {
+    path: ROUTES.PAGE_CATEGORIES,
     component: React.lazy(() => import("pages/Pages/Categories")),
+  },
+  {
+    path: ROUTES.PAGE_TAGS,
+    component: React.lazy(() => import("pages/Pages/Tags")),
   },
 
   // USERS

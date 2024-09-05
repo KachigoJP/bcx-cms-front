@@ -53,3 +53,9 @@ export type PageCategoryType = {
   slug: string;
   description: string;
 };
+
+export type PageTagType = {
+  id: string;
+  name: string;
+  slug: string;
+};

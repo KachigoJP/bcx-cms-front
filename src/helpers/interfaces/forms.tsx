@@ -86,3 +86,9 @@ export interface IPageCategoryForm {
   slug?: string;
   description?: string;
 }
+
+export interface IPageTagForm {
+  id?: string;
+  name: string;
+  slug?: string;
+}

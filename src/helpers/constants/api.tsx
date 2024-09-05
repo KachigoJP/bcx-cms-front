@@ -28,5 +28,7 @@ export const API = {
 
   USERS: `${API_URL}/users`,
   SETTINGS: `${API_URL}/settings`,
+  PAGES: `${API_URL}/pages`,
   PAGE_CATEGORIES: `${API_URL}/pages/categories`,
+  PAGE_TAGS: `${API_URL}/pages/tags`,
 };
