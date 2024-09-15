@@ -1,6 +1,3 @@
-import Currencies from "assets/json/currencies.json";
-import CryptoCurrencies from "assets/json/cryptocurrencies.json";
-
 export const PAYPAL_CLIENT_ID =
   process.env.REACT_APP_PAYPAL_CLIENT_ID ||
   "AXoErDhZilyTAlGA5Tx_8KaldcOlojcp1pgOw4AJr9kRlrEKiE6IrEeuQG4mB2kJzGNP5DPoG8KRAohd";

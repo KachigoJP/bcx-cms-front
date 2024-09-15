@@ -6,16 +6,21 @@ import { ObjectSchema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // Source
-import { IPageCategoryForm, PageCategoryModalProps } from "helpers/interfaces";
+import {
+  IPageCategoryForm,
+  ModifyModalProps,
+  PageCategoryType,
+} from "helpers/interfaces";
 import { useApi, FieldError } from "helpers/api";
 import { API } from "helpers/constants";
 import { getPageCategorySchema } from "helpers/schemas";
 import * as Helpers from "helpers/functions";
 
-const PageCategoryModal: React.FC<PageCategoryModalProps> = (props) => {
+const PageCategoryModal: React.FC<ModifyModalProps> = (props) => {
   const { t, i18n } = useTranslation();
 
-  const { data, show, onClose } = props;
+  const { show, onClose } = props;
+  const data = props.data as PageCategoryType;
 
   const {
     state: stateCategory,

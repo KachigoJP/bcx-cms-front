@@ -6,16 +6,21 @@ import { ObjectSchema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // Source
-import { IPageTagForm, PageTagModalProps } from "helpers/interfaces";
+import {
+  IPageTagForm,
+  ModifyModalProps,
+  PageTagType,
+} from "helpers/interfaces";
 import { useApi, FieldError } from "helpers/api";
 import { API } from "helpers/constants";
 import { getPageTagSchema } from "helpers/schemas";
 import * as Helpers from "helpers/functions";
 
-const PageTagModal: React.FC<PageTagModalProps> = (props) => {
+const PageTagModal: React.FC<ModifyModalProps> = (props) => {
   const { t, i18n } = useTranslation();
 
-  const { data, show, onClose } = props;
+  const { show, onClose } = props;
+  const data = props.data as PageTagType;
 
   const { state: stateTag, sendRequest, reset: resetReqest } = useApi();
 

@@ -123,13 +123,13 @@ const ListPages: React.FC = () => {
           <Card.Title>
             <Row>
               <Col className="d-flex align-items-end">
-                <Link to={ROUTES.USER_CREATE} className="btn btn-primary">
-                  {t("Create User")}
+                <Link to={ROUTES.PAGES_CREATE} className="btn btn-primary">
+                  {t("Add new")}
                 </Link>
               </Col>
             </Row>
             <Row>
-              <Col lg={5}>
+              <Col>
                 <Form.Group className="me-5">
                   <Form.Label column>{t("Search")}</Form.Label>
                   <Form.Control

@@ -28,4 +28,5 @@ export const ROUTES = {
   PAGES_UPDATE: "/pages/:id",
   PAGE_CATEGORIES: "/pages/categories",
   PAGE_TAGS: "/pages/tags",
+  LANGUAGES: "/languages",
 };

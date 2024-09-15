@@ -7,28 +7,29 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 // Source
 import {
-  ISettingForm,
+  ILanguageForm,
+  LanguageType,
   ModifyModalProps,
-  SettingType,
 } from "helpers/interfaces";
 import { useApi, FieldError } from "helpers/api";
-import { API, FIELDTYPE_OPTIONS } from "helpers/constants";
-import { getSettingSchema } from "helpers/schemas";
+import { API } from "helpers/constants";
+import { getLanguageSchema } from "helpers/schemas";
+import Languages from "assets/json/languages.json";
 
-const SettingModal: React.FC<ModifyModalProps> = (props) => {
+const LanguageModal: React.FC<ModifyModalProps> = (props) => {
   const { t, i18n } = useTranslation();
 
   const { show, onClose } = props;
-  const data = props.data as SettingType;
+  const data = props.data as LanguageType;
 
   const {
-    state: stateSetting,
+    state: stateData,
     sendRequest: sendUpdateRequest,
     reset: resetReqest,
   } = useApi();
 
   // Form Validations
-  const validationSchema = getSettingSchema(t);
+  const validationSchema = getLanguageSchema(t);
 
   const {
     register,
@@ -36,9 +37,11 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
     formState: { errors },
     reset,
     clearErrors,
-  } = useForm<ISettingForm>({
+    setValue,
+    watch,
+  } = useForm<ILanguageForm>({
     resolver: yupResolver(
-      validationSchema as unknown as ObjectSchema<ISettingForm>
+      validationSchema as unknown as ObjectSchema<ILanguageForm>
     ),
   });
 
@@ -46,26 +49,24 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
   React.useEffect(() => {
     reset({
       id: data?.id,
-      key: data?.key || "",
-      type: data?.type || "",
-      label: data?.label || "",
-      value: data?.value || "",
-      description: data?.description || "",
+      name: data?.name || "",
+      code: data?.code || "",
+      is_default: data?.is_default || false,
+      direction: data?.direction || "",
     });
   }, [data]);
 
   React.useEffect(() => {
-    const response = stateSetting.data;
+    const response = stateData.data;
 
     if (response && response.status === 200) {
       if (onClose) {
         reset({
           id: data?.id,
-          key: data?.key || "",
-          type: data?.type || "",
-          label: data?.label || "",
-          value: data?.value || "",
-          description: data?.description || "",
+          name: data?.name || "",
+          code: data?.code || "",
+          is_default: data?.is_default || false,
+          direction: data?.direction || "",
         });
         clearErrors();
         resetReqest();
@@ -73,26 +74,40 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
         onClose(true);
       }
     }
-  }, [stateSetting]);
+  }, [stateData]);
+
+  React.useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      if (name == "name" && value.name) {
+        Languages.map((item, idx) => {
+          if (item.name === value.name) {
+            setValue("code", item.code);
+          }
+        });
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   // Method
-  const onSubmit = (data: ISettingForm) => {
+  const onSubmit = (data: ILanguageForm) => {
     if (data?.id) {
       sendUpdateRequest({
         method: "put",
-        url: `${API.SETTINGS}/${data?.id}`,
+        url: `${API.LANGUAGES}/${data?.id}`,
         data,
       });
     } else {
       sendUpdateRequest({
         method: "post",
-        url: `${API.SETTINGS}`,
+        url: `${API.LANGUAGES}`,
         data,
       });
     }
   };
 
-  const onSubmitFail = (errors: FieldErrors<ISettingForm>) => {
+  const onSubmitFail = (errors: FieldErrors<ILanguageForm>) => {
     console.log("errs", errors);
   };
 
@@ -108,13 +123,13 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
     <Modal size="lg" show={show} onHide={onClose} centered>
       <Form onSubmit={handleSubmit(onSubmit, onSubmitFail)}>
         <Modal.Title style={{ margin: "20px 10px", fontWeight: "600" }}>
-          {t("Update Setting")}
+          {t("Langauge")}
         </Modal.Title>
         <Modal.Body className="text-center">
           <Row>
-            {stateSetting.isError && stateSetting.errors ? (
+            {stateData.isError && stateData.errors ? (
               <Alert variant="danger" className="text-start">
-                {stateSetting.errors.map((field: FieldError, key: number) => {
+                {stateData.errors.map((field: FieldError, key: number) => {
                   return (
                     <React.Fragment key={key}>
                       <p>{`${t(field.name.toUpperCase())}`}</p>
@@ -133,97 +148,70 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
           </Row>
           <Row className="mb-3">
             <Form.Label className="col-md-3 col-form-label">
-              {t("Type")}
+              {t("Name")}
             </Form.Label>
             <Col sm={8} className="text-start">
-              <Form.Select defaultValue={data?.type} {...register("type")}>
+              <Form.Select defaultValue={data?.name} {...register("name")}>
                 <option>{t("Please select")}</option>
-                {FIELDTYPE_OPTIONS.map((item, idx) => {
+                {Languages.map((item, idx) => {
                   return (
-                    <option key={idx} value={item.value}>
-                      {t(item.label)}
+                    <option key={idx} value={item.name}>
+                      {t(item.name)}
                     </option>
                   );
                 })}
               </Form.Select>
               <Form.Text className="text-danger">
-                {errors.type?.message}
+                {errors.name?.message}
               </Form.Text>
             </Col>
           </Row>
           <Row className="mb-3">
             <Form.Label className="col-md-3 col-form-label">
-              {t("Key")}
+              {t("Code")}
             </Form.Label>
             <Col sm={8} className="text-start">
               <Form.Control
                 type="text"
-                defaultValue={data?.key}
-                {...register("key")}
+                defaultValue={data?.code}
+                {...register("code")}
               />
               <Form.Text className="text-danger">
-                {errors.key?.message}
+                {errors.code?.message}
               </Form.Text>
             </Col>
           </Row>
           <Row className="mb-3">
             <Form.Label className="col-md-3 col-form-label">
-              {t("Label")}
+              {t("Is Default")}
             </Form.Label>
             <Col sm={8} className="text-start">
-              <Form.Control
-                type="text"
-                defaultValue={data?.label}
-                {...register("label")}
-              />
+              <Form.Select
+                defaultValue={data?.is_default.toString() || "false"}
+                {...register("is_default")}
+              >
+                <option value="false">{t("False")}</option>
+                <option value="true">{t("True")}</option>
+              </Form.Select>
               <Form.Text className="text-danger">
-                {errors.label?.message}
+                {errors.name?.message}
               </Form.Text>
             </Col>
           </Row>
           <Row className="mb-3">
             <Form.Label className="col-md-3 col-form-label">
-              {t("Value")}
+              {t("Direction")}
             </Form.Label>
             <Col sm={8} className="text-start">
-              {(() => {
-                if (data && data?.type === "richtext") {
-                  return (
-                    <Form.Control
-                      as="textarea"
-                      rows={5}
-                      defaultValue={data?.value}
-                      {...register("value")}
-                    />
-                  );
-                } else {
-                  return (
-                    <Form.Control
-                      type="text"
-                      defaultValue={data?.value}
-                      {...register("value")}
-                    />
-                  );
-                }
-              })()}
+              <Form.Select
+                defaultValue={data?.direction.toString() || "ltr"}
+                {...register("direction")}
+              >
+                <option value="ltr">{t("LTR")}</option>
+                <option value="rtl">{t("RTL")}</option>
+              </Form.Select>
               <Form.Text className="text-danger">
-                {errors.value?.message}
-              </Form.Text>
-            </Col>
-          </Row>
-          <Row className="mb-3">
-            <Form.Label className="col-md-3 col-form-label">
-              {t("Description")}
-            </Form.Label>
-            <Col sm={8} className="text-start">
-              <Form.Control
-                as="textarea"
-                rows={5}
-                defaultValue={data?.description}
-                {...register("description")}
-              />
-              <Form.Text className="text-danger">
-                {errors.description?.message}
+                {errors.direction?.message}
               </Form.Text>
             </Col>
           </Row>
@@ -231,7 +219,7 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
         <Modal.Footer className="justify-content-center">
           <Button onClick={onCloseModal}>{t("Close")}</Button>
           <Button type="submit">
-            {stateSetting.isLoading ? (
+            {stateData.isLoading ? (
               <>
                 <Spinner
                   as="span"
@@ -243,7 +231,7 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
                 <span className="ms-1">{t("Loading...")}</span>
               </>
             ) : (
-              t("Update")
+              t("Confirm")
             )}
           </Button>
         </Modal.Footer>
@@ -252,4 +240,4 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
   );
 };
 
-export default SettingModal;
+export default LanguageModal;

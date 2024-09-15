@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 
-// UI Imports
-import { Row, Button } from "react-bootstrap";
+// UI Import
 import {
   MdDashboard,
   MdPerson,
@@ -13,6 +12,7 @@ import {
   MdCategory,
   MdLocalOffer,
   MdOutlineWeb,
+  MdOutlineTranslate,
 } from "react-icons/md";
 import "scss/common/components/_dashboard.scss";
 
@@ -148,6 +148,16 @@ const Sidebar: React.FC = () => {
               <Link to={ROUTES.TESTIMONIAL} className="nav-link">
                 <MdOutlineSentimentSatisfiedAlt className="link-icon" />
                 <span className="link-title">{t("Testimonials")}</span>
+              </Link>
+            </li>
+            <li
+              className={`nav-item ${
+                location.pathname === ROUTES.LANGUAGES ? "active" : ""
+              }`}
+            >
+              <Link to={ROUTES.LANGUAGES} className="nav-link">
+                <MdOutlineTranslate className="link-icon" />
+                <span className="link-title">{t("Languages")}</span>
               </Link>
             </li>
             <li

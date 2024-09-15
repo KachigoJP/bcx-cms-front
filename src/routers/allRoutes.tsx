@@ -39,6 +39,10 @@ const authRoutes = [
     path: ROUTES.SETTING,
     component: React.lazy(() => import("pages/Setting")),
   },
+  {
+    path: ROUTES.LANGUAGES,
+    component: React.lazy(() => import("pages/Languages")),
+  },
   // PAGES
   {
     path: ROUTES.PAGES,
@@ -46,11 +50,11 @@ const authRoutes = [
   },
   {
     path: ROUTES.PAGES_UPDATE,
-    component: React.lazy(() => import("pages/Users/UpdateUser")),
+    component: React.lazy(() => import("pages/Pages/UpdatePage")),
   },
   {
     path: ROUTES.PAGES_CREATE,
-    component: React.lazy(() => import("pages/Users/CreateUser")),
+    component: React.lazy(() => import("pages/Pages/CreatePage")),
   },
   {
     path: ROUTES.PAGE_CATEGORIES,

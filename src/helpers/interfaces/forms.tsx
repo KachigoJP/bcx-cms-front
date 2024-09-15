@@ -32,6 +32,7 @@ export interface IUserForm {
   isAccountInit: string;
   is2FAEnabled: string;
 }
+
 export interface ILoginForm {
   email: string;
   password: string;
@@ -91,4 +92,22 @@ export interface IPageTagForm {
   id?: string;
   name: string;
   slug?: string;
+}
+
+export interface IPageForm {
+  title: string;
+  slug: string;
+  content: string;
+  photo: string;
+  status: string;
+  category: IPageCategoryForm;
+  tags: string[];
+}
+
+export interface ILanguageForm {
+  id?: string;
+  name: string;
+  code: string;
+  is_default: boolean;
+  direction: string;
 }

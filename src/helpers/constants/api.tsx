@@ -28,7 +28,10 @@ export const API = {
 
   USERS: `${API_URL}/users`,
   SETTINGS: `${API_URL}/settings`,
+  LANGUAGES: `${API_URL}/languages`,
   PAGES: `${API_URL}/pages`,
+  PAGES_METADATA: `${API_URL}/pages/:page/metadatas`,
+  PAGES_OPTIONS: `${API_URL}/pages/options`,
   PAGE_CATEGORIES: `${API_URL}/pages/categories`,
   PAGE_TAGS: `${API_URL}/pages/tags`,
 };

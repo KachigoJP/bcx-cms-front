@@ -368,6 +368,30 @@ export const getUserSchema = (t: TFunction) => {
   });
 };
 
+export const getLanguageSchema = (t: TFunction) => {
+  return Yup.object().shape({
+    name: getErrorText(t, "name", {
+      required: true,
+      minLength: 1,
+      maxLength: FIELD_LIMIT.MAX_CHARACTER,
+    }),
+    code: (
+      getErrorText(t, "code", {
+        required: true,
+        maxLength: FIELD_LIMIT.MAX_CHARACTER,
+      }) as Yup.StringSchema
+    ).matches(REGEX.SLUG, {
+      message: t("code must have only lowercase and characters: -, _"),
+    }),
+    is_default: getErrorText(t, "value", {
+      notRequired: true,
+    }),
+    direction: getErrorText(t, "value", {
+      notRequired: true,
+    }),
+  });
+};
+
 export const settingFeeSchema = (t: TFunction) => {
   return Yup.object().shape({
     accountOpenFastFee: getErrorText(
@@ -378,5 +402,31 @@ export const settingFeeSchema = (t: TFunction) => {
       },
       "number"
     ),
+  });
+};
+
+export const getPageSchema = (t: TFunction) => {
+  return Yup.object().shape({
+    title: getErrorText(t, "Title", {
+      required: true,
+      minLength: 1,
+      maxLength: FIELD_LIMIT.MAX_CHARACTER,
+    }),
+    slug: getErrorText(t, "Slug", {
+      minLength: 1,
+      maxLength: FIELD_LIMIT.MAX_CHARACTER,
+    }),
+    photo: getErrorText(t, "Photo", {
+      minLength: 1,
+      maxLength: FIELD_LIMIT.MAX_CHARACTER,
+    }),
+    content: getErrorText(t, "Content", {
+      minLength: 1,
+      maxLength: FIELD_LIMIT.MAX_CHARACTER,
+    }),
+    status: getErrorText(t, "Status", {
+      minLength: 1,
+      maxLength: FIELD_LIMIT.MAX_CHARACTER,
+    }),
   });
 };

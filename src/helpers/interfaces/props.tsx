@@ -1,6 +1,13 @@
 import { UseFormReturn } from "react-hook-form";
-import { AuthUser, PageCategoryType, PageTagType, SettingType } from "./types";
-import { IUserForm } from "./forms";
+import {
+  AuthUser,
+  LanguageType,
+  PageCategoryType,
+  PageMetadataType,
+  PageTagType,
+  SettingType,
+} from "./types";
+import { IUserForm, IPageForm } from "./forms";
 
 export interface AuthProps {
   isAuthenticated: boolean;
@@ -16,20 +23,28 @@ export interface UserFormProps {
   hookForm: UseFormReturn<IUserForm>;
 }
 
-export interface SettingModalProps {
+export interface PageFormProps {
+  data?: IPageForm;
+  hookForm: UseFormReturn<IPageForm>;
+}
+
+export interface ModifyModalProps {
   show: boolean;
-  data?: SettingType;
+  data?:
+    | PageCategoryType
+    | PageTagType
+    | SettingType
+    | LanguageType
+    | PageMetadataType;
   onClose?: (isSuccess?: boolean) => void;
 }
 
-export interface PageCategoryModalProps {
-  show: boolean;
-  data?: PageCategoryType;
-  onClose?: (isSuccess?: boolean) => void;
+export interface MetadataModalProps extends ModifyModalProps {
+  rootId: string;
 }
 
-export interface PageTagModalProps {
-  show: boolean;
-  data?: PageTagType;
-  onClose?: (isSuccess?: boolean) => void;
+export interface MetadataTableProps {
+  pageId: string;
+  data?: PageMetadataType[];
+  onReload?: Function;
 }

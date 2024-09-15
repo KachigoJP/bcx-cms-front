@@ -59,3 +59,20 @@ export type PageTagType = {
   name: string;
   slug: string;
 };
+
+export type LanguageType = {
+  id: string;
+  name: string;
+  code: string;
+  is_default: boolean;
+  direction: string;
+};
+
+export type PageMetadataType = {
+  id: string;
+  key: string;
+  label: string;
+  value: string;
+  type: string;
+  description: string;
+};

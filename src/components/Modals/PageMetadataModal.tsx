@@ -8,18 +8,22 @@ import { yupResolver } from "@hookform/resolvers/yup";
 // Source
 import {
   ISettingForm,
-  ModifyModalProps,
-  SettingType,
+  MetadataModalProps,
+  PageMetadataType,
 } from "helpers/interfaces";
 import { useApi, FieldError } from "helpers/api";
 import { API, FIELDTYPE_OPTIONS } from "helpers/constants";
 import { getSettingSchema } from "helpers/schemas";
+import { TextEditor } from "components/Components/TextEditor";
 
-const SettingModal: React.FC<ModifyModalProps> = (props) => {
+const PageMetadataModal: React.FC<MetadataModalProps> = (props) => {
+  const modalData = props.data as PageMetadataType;
+
+  const { show, onClose, rootId } = props;
+
   const { t, i18n } = useTranslation();
-
-  const { show, onClose } = props;
-  const data = props.data as SettingType;
+  const editorRef = React.useRef(null);
+  const [type, setType] = React.useState(modalData?.type || "");
 
   const {
     state: stateSetting,
@@ -36,6 +40,8 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
     formState: { errors },
     reset,
     clearErrors,
+    setValue,
+    watch,
   } = useForm<ISettingForm>({
     resolver: yupResolver(
       validationSchema as unknown as ObjectSchema<ISettingForm>
@@ -45,14 +51,14 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
   // Hooks
   React.useEffect(() => {
     reset({
-      id: data?.id,
-      key: data?.key || "",
-      type: data?.type || "",
-      label: data?.label || "",
-      value: data?.value || "",
-      description: data?.description || "",
+      id: modalData?.id,
+      key: modalData?.key || "",
+      type: modalData?.type || "",
+      label: modalData?.label || "",
+      value: modalData?.value || "",
+      description: modalData?.description || "",
     });
-  }, [data]);
+  }, [modalData]);
 
   React.useEffect(() => {
     const response = stateSetting.data;
@@ -60,12 +66,12 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
     if (response && response.status === 200) {
       if (onClose) {
         reset({
-          id: data?.id,
-          key: data?.key || "",
-          type: data?.type || "",
-          label: data?.label || "",
-          value: data?.value || "",
-          description: data?.description || "",
+          id: modalData?.id,
+          key: modalData?.key || "",
+          type: modalData?.type || "",
+          label: modalData?.label || "",
+          value: modalData?.value || "",
+          description: modalData?.description || "",
         });
         clearErrors();
         resetReqest();
@@ -75,18 +81,32 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
     }
   }, [stateSetting]);
 
+  React.useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      if (name == "type" && value.type) {
+        setType(value.type);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
   // Method
+  const onEditorChange = (newValue: string) => {
+    setValue("value", newValue);
+  };
+
   const onSubmit = (data: ISettingForm) => {
-    if (data?.id) {
+    if (modalData?.id) {
       sendUpdateRequest({
         method: "put",
-        url: `${API.SETTINGS}/${data?.id}`,
+        url: `${API.PAGES_METADATA.replace(":page", rootId)}/${modalData.id}`,
         data,
       });
     } else {
       sendUpdateRequest({
         method: "post",
-        url: `${API.SETTINGS}`,
+        url: API.PAGES_METADATA.replace(":page", rootId),
         data,
       });
     }
@@ -136,7 +156,7 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
               {t("Type")}
             </Form.Label>
             <Col sm={8} className="text-start">
-              <Form.Select defaultValue={data?.type} {...register("type")}>
+              <Form.Select defaultValue={modalData?.type} {...register("type")}>
                 <option>{t("Please select")}</option>
                 {FIELDTYPE_OPTIONS.map((item, idx) => {
                   return (
@@ -158,7 +178,7 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
             <Col sm={8} className="text-start">
               <Form.Control
                 type="text"
-                defaultValue={data?.key}
+                defaultValue={modalData?.key}
                 {...register("key")}
               />
               <Form.Text className="text-danger">
@@ -173,7 +193,7 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
             <Col sm={8} className="text-start">
               <Form.Control
                 type="text"
-                defaultValue={data?.label}
+                defaultValue={modalData?.label}
                 {...register("label")}
               />
               <Form.Text className="text-danger">
@@ -187,20 +207,45 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
             </Form.Label>
             <Col sm={8} className="text-start">
               {(() => {
-                if (data && data?.type === "richtext") {
+                if (type && type === "richtext") {
                   return (
-                    <Form.Control
-                      as="textarea"
-                      rows={5}
-                      defaultValue={data?.value}
-                      {...register("value")}
+                    <TextEditor
+                      onInit={(_evt: any, editor: any) =>
+                        (editorRef.current = editor)
+                      }
+                      onEditorChange={onEditorChange}
+                      initialValue={modalData?.value}
+                      init={{
+                        height: 500,
+                        menubar: false,
+                        plugins: [
+                          "advlist",
+                          "anchor",
+                          "autolink",
+                          "help",
+                          "image",
+                          "link",
+                          "lists",
+                          "searchreplace",
+                          "table",
+                          "wordcount",
+                        ],
+                        toolbar:
+                          "undo redo | blocks | " +
+                          "bold italic forecolor | alignleft aligncenter " +
+                          "alignright alignjustify | bullist numlist outdent indent | " +
+                          "image | " +
+                          "removeformat | help",
+                        content_style:
+                          "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                      }}
                     />
                   );
                 } else {
                   return (
                     <Form.Control
                       type="text"
-                      defaultValue={data?.value}
+                      defaultValue={modalData?.value}
                       {...register("value")}
                     />
                   );
@@ -219,7 +264,7 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
               <Form.Control
                 as="textarea"
                 rows={5}
-                defaultValue={data?.description}
+                defaultValue={modalData?.description}
                 {...register("description")}
               />
               <Form.Text className="text-danger">
@@ -252,4 +297,4 @@ const SettingModal: React.FC<ModifyModalProps> = (props) => {
   );
 };
 
-export default SettingModal;
+export default PageMetadataModal;
